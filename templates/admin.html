@@ -1,0 +1,2139 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - Boba &amp; Bites Management | Endfield Edition</title>
+
+    <!-- Permission Check: Redirect immediately if not staff or not logged in -->
+    <script>
+        (function() {
+            const token = localStorage.getItem('access_token');
+            const isStaff = localStorage.getItem('is_staff');
+            if (!token || isStaff !== 'true') {
+                window.location.replace('/');
+            }
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+
+    <!-- Google Fonts: Plus Jakarta Sans & Orbitron -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            /* Endfield Sci-Fi Dark Theme (Default) */
+            --bg-body: #0b0e14;
+            --bg-card: rgba(22, 27, 34, 0.85);
+            --bg-card-solid: #161b22;
+            --bg-card-hover: #1c2128;
+            --border-color: #30363d;
+            --border-glow: rgba(255, 230, 0, 0.35);
+            --text-main: #f0f6fc;
+            --text-muted: #8b949e;
+            --text-light: #c9d1d9;
+            --primary-color: #ffe600; /* Neon Yellow */
+            --primary-hover: #ffd000;
+            --primary-text: #0b0e14;
+            --primary-light: rgba(255, 230, 0, 0.12);
+            --accent-cyan: #00f0ff;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            --card-hover-shadow: 0 15px 35px rgba(255, 230, 0, 0.15), 0 0 1px 1px rgba(255, 230, 0, 0.4);
+            --navbar-bg: rgba(11, 14, 20, 0.92);
+            --input-bg: #0d1117;
+            --input-border: #30363d;
+            --table-header-bg: #161b22;
+            --radius-default: 16px;
+        }
+
+        [data-theme="light"] {
+            --bg-body: #f8fafc;
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --bg-card-solid: #ffffff;
+            --bg-card-hover: #f1f5f9;
+            --border-color: #e2e8f0;
+            --border-glow: rgba(234, 179, 8, 0.4);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --text-light: #334155;
+            --primary-color: #eab308;
+            --primary-hover: #ca8a04;
+            --primary-text: #ffffff;
+            --primary-light: #fef9c3;
+            --accent-cyan: #0284c7;
+            --accent-purple: #7c3aed;
+            --accent-green: #059669;
+            --accent-red: #dc2626;
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            --card-hover-shadow: 0 20px 30px -10px rgba(234, 179, 8, 0.25);
+            --navbar-bg: rgba(255, 255, 255, 0.95);
+            --input-bg: #ffffff;
+            --input-border: #cbd5e1;
+            --table-header-bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Sci-Fi Theme Top Nav */
+        .admin-nav {
+            background: var(--navbar-bg);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+            transition: all 0.3s ease;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--primary-color), #ff9f1c);
+            color: #0b0e14;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 12px rgba(255, 230, 0, 0.4);
+            font-weight: 900;
+        }
+
+        .brand-badge {
+            background: linear-gradient(135deg, var(--primary-color), #ff9f1c);
+            color: #0b0e14;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 900;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* Stat Cards */
+        .stat-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-default);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary-color);
+            box-shadow: var(--card-hover-shadow);
+        }
+
+        .stat-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            flex-shrink: 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .icon-revenue {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .icon-orders {
+            background: rgba(0, 240, 255, 0.15);
+            color: var(--accent-cyan);
+            border-color: rgba(0, 240, 255, 0.3);
+        }
+
+        .icon-products {
+            background: rgba(168, 85, 247, 0.15);
+            color: var(--accent-purple);
+            border-color: rgba(168, 85, 247, 0.3);
+        }
+
+        .icon-lowstock {
+            background: rgba(255, 230, 0, 0.15);
+            color: var(--primary-color);
+            border-color: rgba(255, 230, 0, 0.3);
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1.2;
+            margin-bottom: 4px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .stat-label {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        /* Sci-Fi Table Card */
+        .table-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-default);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+
+        .table-card-header {
+            background: var(--bg-card-solid);
+            padding: 1.1rem 1.4rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table-custom {
+            color: var(--text-main);
+            margin-bottom: 0;
+            border-color: var(--border-color);
+        }
+
+        .table-custom th {
+            background-color: var(--table-header-bg);
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table-custom td {
+            padding: 1rem 1.2rem;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--border-color);
+            background-color: transparent;
+            color: var(--text-main);
+        }
+
+        .table-custom tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table-custom tbody tr:hover td {
+            background-color: rgba(255, 230, 0, 0.04);
+        }
+
+        /* Quantity Input & Restock Button */
+        .input-restock {
+            width: 85px;
+            text-align: center;
+            font-weight: 700;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--input-bg);
+            color: var(--text-main);
+            padding: 6px 10px;
+        }
+
+        .input-restock:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(255, 230, 0, 0.2);
+            outline: none;
+        }
+
+        .btn-restock {
+            background: linear-gradient(135deg, var(--primary-color), #ff9f1c);
+            color: #0b0e14;
+            font-weight: 800;
+            border-radius: 8px;
+            padding: 6px 16px;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.88rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(255, 230, 0, 0.3);
+        }
+
+        .btn-restock:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(255, 230, 0, 0.5);
+            color: #0b0e14;
+        }
+
+        .btn-restock:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Product Image Thumbnail */
+        .product-thumb {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: var(--input-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            border: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        /* Category Badges */
+        .badge-cat-tra-sua {
+            background-color: rgba(168, 85, 247, 0.18);
+            color: #c084fc;
+            border: 1px solid rgba(168, 85, 247, 0.35);
+        }
+
+        .badge-cat-thuc-an {
+            background-color: rgba(249, 115, 22, 0.18);
+            color: #fb923c;
+            border: 1px solid rgba(249, 115, 22, 0.35);
+        }
+
+        .badge-cat-other {
+            background-color: rgba(100, 116, 139, 0.18);
+            color: #94a3b8;
+            border: 1px solid rgba(100, 116, 139, 0.35);
+        }
+
+        /* Top Products Rank Badges */
+        .rank-badge {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 0.82rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .rank-1 {
+            background: linear-gradient(135deg, #ffd700, #ffae00);
+            color: #0b0e14;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+        }
+        .rank-2 {
+            background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+            color: #0b0e14;
+        }
+        .rank-3 {
+            background: linear-gradient(135deg, #d97706, #92400e);
+            color: #ffffff;
+        }
+        .rank-other {
+            background: var(--input-bg);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Pulse badge */
+        .pulse-danger {
+            animation: pulse-danger-anim 1.8s infinite;
+        }
+
+        @keyframes pulse-danger-anim {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.06); opacity: 0.85; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Custom Sci-Fi Tabs */
+        .nav-pills-custom .nav-link {
+            border-radius: 30px;
+            padding: 9px 22px;
+            font-weight: 700;
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-pills-custom .nav-link:hover {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            background-color: var(--primary-light);
+        }
+
+        .nav-pills-custom .nav-link.active {
+            background: var(--primary-color);
+            color: var(--primary-text);
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 16px rgba(255, 230, 0, 0.35);
+            font-weight: 800;
+        }
+
+        /* Admin Chat UI */
+        .chat-container-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-default);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+
+        .customer-list-box {
+            border-right: 1px solid var(--border-color);
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-card-solid);
+        }
+
+        .customer-list-scroll {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .customer-item {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .customer-item:hover {
+            background-color: rgba(255, 230, 0, 0.06);
+        }
+
+        .customer-item.active {
+            background-color: var(--primary-light);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .cust-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), #ff9f1c);
+            color: #0b0e14;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            flex-shrink: 0;
+            box-shadow: 0 2px 6px rgba(255, 230, 0, 0.25);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .chat-conversation-box {
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-card);
+        }
+
+        .chat-history-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: var(--bg-body);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .bubble-admin {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--primary-color), #ffb703);
+            color: #0b0e14;
+            font-weight: 500;
+            border-bottom-right-radius: 4px;
+            padding: 10px 16px;
+            border-radius: 16px;
+            max-width: 75%;
+            font-size: 0.92rem;
+            line-height: 1.45;
+            box-shadow: 0 2px 8px rgba(255, 230, 0, 0.2);
+            word-break: break-word;
+        }
+
+        .bubble-customer {
+            align-self: flex-start;
+            background: var(--bg-card-solid);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-bottom-left-radius: 4px;
+            padding: 10px 16px;
+            border-radius: 16px;
+            max-width: 75%;
+            font-size: 0.92rem;
+            line-height: 1.45;
+            box-shadow: var(--card-shadow);
+            word-break: break-word;
+        }
+
+        .bubble-meta {
+            font-size: 0.72rem;
+            opacity: 0.75;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .bubble-admin .bubble-meta {
+            text-align: right;
+            color: rgba(0, 0, 0, 0.75);
+        }
+
+        .bubble-customer .bubble-meta {
+            text-align: right;
+            color: var(--text-muted);
+        }
+
+        .chat-input-box {
+            padding: 14px 20px;
+            background: var(--bg-card-solid);
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Modal Styles */
+        .modal-content {
+            background-color: var(--bg-card-solid);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .modal-header, .modal-footer {
+            border-color: var(--border-color);
+        }
+
+        .form-control, .form-select {
+            background-color: var(--input-bg);
+            border-color: var(--input-border);
+            color: var(--text-main);
+        }
+
+        .form-control:focus, .form-select:focus {
+            background-color: var(--input-bg);
+            border-color: var(--primary-color);
+            color: var(--text-main);
+            box-shadow: 0 0 0 3px rgba(255, 230, 0, 0.25);
+        }
+
+        .input-group-text {
+            background-color: var(--input-bg);
+            border-color: var(--input-border);
+            color: var(--text-muted);
+        }
+
+        /* Sci-Fi Primary Button */
+        .btn-neon-primary {
+            background: var(--primary-color);
+            color: var(--primary-text);
+            font-weight: 800;
+            border: none;
+            transition: all 0.25s ease;
+        }
+
+        .btn-neon-primary:hover:not(:disabled) {
+            background: var(--primary-hover);
+            color: var(--primary-text);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(255, 230, 0, 0.4);
+        }
+
+        /* Sci-Fi Chart Container */
+        .chart-container {
+            position: relative;
+            height: 280px;
+            width: 100%;
+        }
+
+        @keyframes tab-content-in {
+            from { opacity: 0; transform: translateY(12px) scale(0.99); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .tab-pane.show.active {
+            animation: tab-content-in 0.42s ease both;
+        }
+
+        .tab-pane.show.active .stat-card,
+        .tab-pane.show.active .table-card,
+        .tab-pane.show.active .chat-container-card {
+            animation: tab-content-in 0.42s ease both;
+        }
+
+        .tab-pane.show.active .stat-card:nth-child(2),
+        .tab-pane.show.active .table-card:nth-child(2) { animation-delay: 0.06s; }
+        .tab-pane.show.active .stat-card:nth-child(3),
+        .tab-pane.show.active .table-card:nth-child(3) { animation-delay: 0.12s; }
+        .tab-pane.show.active .stat-card:nth-child(4) { animation-delay: 0.18s; }
+
+        .nav-pills-custom .nav-link i { transition: transform 0.25s ease; }
+        .nav-pills-custom .nav-link:hover i,
+        .nav-pills-custom .nav-link.active i { transform: translateY(-2px) scale(1.08); }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ADMIN NAVBAR -->
+    <nav class="admin-nav py-2">
+        <div class="container-fluid px-lg-5">
+            <div class="d-flex align-items-center justify-content-between">
+                <!-- Left Brand -->
+                <div class="d-flex align-items-center gap-3">
+                    <a href="/" class="brand-logo">
+                        <div class="brand-icon">
+                            <i class="bi bi-cup-hot-fill"></i>
+                        </div>
+                        <span class="d-none d-sm-inline">BOBA &amp; BITES</span>
+                    </a>
+                    <span class="brand-badge">Admin Portal</span>
+                </div>
+
+                <!-- Right Actions -->
+                <div class="d-flex align-items-center gap-2 gap-sm-3">
+                    <!-- Dark/Light Mode Switcher -->
+                    <button class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center p-2" id="themeToggleBtn" onclick="toggleTheme()" title="Chuyển chế độ Sáng / Tối" style="width: 36px; height: 36px; border-color: var(--border-color); color: var(--text-main);">
+                        <i class="bi bi-sun-fill" id="themeIcon"></i>
+                    </button>
+
+                    <a href="/" class="btn btn-outline-secondary btn-sm rounded-pill px-3 d-none d-sm-inline-flex align-items-center gap-2" style="border-color: var(--border-color); color: var(--text-main);">
+                        <i class="bi bi-shop"></i>
+                        <span>Xem Cửa Hàng</span>
+                    </a>
+
+                    <button class="btn btn-outline-secondary btn-sm rounded-pill px-3 d-flex align-items-center gap-2 shadow-none" onclick="refreshAllData()" title="Làm mới dữ liệu" style="border-color: var(--border-color); color: var(--text-main);">
+                        <i class="bi bi-arrow-clockwise" id="refreshIcon"></i>
+                        <span class="d-none d-md-inline">Làm mới</span>
+                    </button>
+
+                    <!-- Admin Info & Logout -->
+                    <div class="d-flex align-items-center gap-2 border-start ps-3" style="border-color: var(--border-color) !important;">
+                        <div class="cust-avatar" style="width: 34px; height: 34px; font-size: 0.9rem;" id="adminAvatar">
+                            A
+                        </div>
+                        <div class="d-none d-md-block text-start" style="line-height: 1.2;">
+                            <div class="fw-bold small" id="adminUsername">Admin</div>
+                            <span class="text-muted" style="font-size: 0.72rem;">Quản trị viên</span>
+                        </div>
+                        <button class="btn btn-outline-danger btn-sm rounded-pill ms-2 px-3 py-1" onclick="handleLogout()" title="Đăng xuất">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span class="d-none d-md-inline ms-1">Đăng xuất</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN DASHBOARD CONTENT -->
+    <main class="container-fluid px-lg-5 my-4 flex-grow-1">
+
+        <!-- Header Title Banner -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-4">
+            <div>
+                <h3 class="fw-extrabold mb-1" style="font-family: 'Orbitron', sans-serif; font-weight: 800; color: var(--primary-color);">
+                    QUẢN TRỊ &amp; THỐNG KÊ HỆ THỐNG
+                </h3>
+                <p class="text-muted small mb-0">Theo dõi phân tích doanh thu 7 ngày, kiểm soát thực đơn, kho hàng và phản hồi khách hàng.</p>
+            </div>
+            <div class="text-md-end">
+                <span class="badge border px-3 py-2 rounded-pill fw-semibold shadow-sm" style="background: var(--bg-card); border-color: var(--border-color) !important; color: var(--text-main);">
+                    <i class="bi bi-calendar3 me-1" style="color: var(--primary-color);"></i> <span id="currentDate">--/--/----</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- NAVIGATION TABS -->
+        <ul class="nav nav-pills nav-pills-custom gap-2 mb-4" id="adminTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="tab-overview-btn" data-bs-toggle="pill" data-bs-target="#tab-overview" type="button" role="tab" aria-controls="tab-overview" aria-selected="true">
+                    <i class="bi bi-grid-fill"></i>
+                    <span>Tổng Quan &amp; Phân Tích</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-menu-btn" data-bs-toggle="pill" data-bs-target="#tab-menu" type="button" role="tab" aria-controls="tab-menu" aria-selected="false">
+                    <i class="bi bi-card-checklist"></i>
+                    <span>Quản Lý Thực Đơn (CRUD)</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-chat-btn" data-bs-toggle="pill" data-bs-target="#tab-chat" type="button" role="tab" aria-controls="tab-chat" aria-selected="false" onclick="onOpenChatTab()">
+                    <i class="bi bi-chat-dots-fill"></i>
+                    <span>Tin Nhắn Khách Hàng</span>
+                    <span class="badge bg-danger rounded-pill ms-1" id="chatCustomerCountBadge">0</span>
+                </button>
+            </li>
+        </ul>
+
+        <!-- TAB CONTENT CONTAINER -->
+        <div class="tab-content" id="adminTabsContent">
+
+            <!-- TAB 1: OVERVIEW & ANALYTICS -->
+            <div class="tab-pane fade show active" id="tab-overview" role="tabpanel" aria-labelledby="tab-overview-btn">
+                <!-- STAT CARDS ROW -->
+                <div class="row g-4 mb-4">
+                    <!-- 1. Total Revenue -->
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="stat-card">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <div class="stat-label">Tổng Doanh Thu</div>
+                                    <div class="stat-value" style="color: var(--accent-green);" id="statRevenue">0 ₫</div>
+                                    <small class="text-muted"><i class="bi bi-graph-up-arrow me-1" style="color: var(--accent-green);"></i>Từ tất cả đơn hàng</small>
+                                </div>
+                                <div class="stat-icon icon-revenue">
+                                    <i class="bi bi-wallet2"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Total Orders -->
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="stat-card">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <div class="stat-label">Tổng Đơn Hàng</div>
+                                    <div class="stat-value" style="color: var(--accent-cyan);" id="statOrders">0</div>
+                                    <small class="text-muted"><i class="bi bi-bag-check me-1" style="color: var(--accent-cyan);"></i>Đơn đã ghi nhận</small>
+                                </div>
+                                <div class="stat-icon icon-orders">
+                                    <i class="bi bi-receipt-cutoff"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Total Products -->
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="stat-card">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <div class="stat-label">Tổng Số Món Ăn</div>
+                                    <div class="stat-value" style="color: var(--accent-purple);" id="statProducts">0</div>
+                                    <small class="text-muted"><i class="bi bi-cup-straw me-1" style="color: var(--accent-purple);"></i>Món trên thực đơn</small>
+                                </div>
+                                <div class="stat-icon icon-products">
+                                    <i class="bi bi-grid-fill"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. Low Stock Alert Count -->
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="stat-card">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <div class="stat-label">Món Sắp Hết Hàng</div>
+                                    <div class="stat-value" style="color: var(--primary-color);" id="statLowStockCount">0</div>
+                                    <small class="fw-semibold" style="color: var(--accent-red);" id="statLowStockNote"><i class="bi bi-exclamation-triangle me-1"></i>Tồn kho &lt; 5 phần</small>
+                                </div>
+                                <div class="stat-icon icon-lowstock">
+                                    <i class="bi bi-box-seam"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ADVANCED ANALYTICS SECTION: 7-DAY REVENUE CHART & TOP 5 BEST SELLERS -->
+                <div class="row g-4 mb-4">
+                    <!-- Left: 7-Day Revenue Line/Bar Chart -->
+                    <div class="col-12 col-lg-8">
+                        <div class="table-card h-100">
+                            <div class="table-card-header d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div style="width: 32px; height: 32px; background: rgba(255, 230, 0, 0.15); color: var(--primary-color); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
+                                        <i class="bi bi-graph-up"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-0 text-uppercase" style="font-family: 'Orbitron', sans-serif; letter-spacing: 0.5px;">Biểu Đồ Doanh Thu 7 Ngày Gần Nhất</h6>
+                                        <small class="text-muted">Xu hướng biến động doanh thu theo từng ngày</small>
+                                    </div>
+                                </div>
+                                <span class="badge border rounded-pill px-3 py-1" style="background: var(--input-bg); border-color: var(--border-color) !important; color: var(--primary-color);">
+                                    <i class="bi bi-activity me-1"></i> Live Data
+                                </span>
+                            </div>
+                            <div class="p-3 p-md-4">
+                                <div class="chart-container" id="chartWrapper">
+                                    <canvas id="revenueChart"></canvas>
+                                </div>
+                                <div id="chartLoadingState" class="text-center py-5 d-none">
+                                    <div class="spinner-border" style="color: var(--primary-color);" role="status"></div>
+                                    <div class="text-muted small mt-2">Đang tải số liệu biểu đồ...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Top 5 Best-Selling Products Table -->
+                    <div class="col-12 col-lg-4">
+                        <div class="table-card h-100">
+                            <div class="table-card-header d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div style="width: 32px; height: 32px; background: rgba(0, 240, 255, 0.15); color: var(--accent-cyan); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
+                                        <i class="bi bi-trophy-fill"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-0 text-uppercase" style="font-family: 'Orbitron', sans-serif; letter-spacing: 0.5px;">Top 5 Bán Chạy</h6>
+                                        <small class="text-muted">Các món được yêu thích nhất</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-custom mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 50px;" class="text-center">#</th>
+                                                <th>Món Ăn</th>
+                                                <th style="width: 90px;" class="text-end">Đã Bán</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="topProductsTableBody">
+                                            <tr>
+                                                <td colspan="3" class="text-center py-4 text-muted small">
+                                                    <div class="spinner-border spinner-border-sm" style="color: var(--primary-color);" role="status"></div>
+                                                    <span class="ms-2">Đang tải top bán chạy...</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LOW STOCK PRODUCTS TABLE SECTION -->
+                <div class="table-card mb-4">
+                    <div class="table-card-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <div style="width: 32px; height: 32px; background: rgba(239, 68, 68, 0.15); color: var(--accent-red); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
+                                <i class="bi bi-exclamation-octagon-fill"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0 text-uppercase" style="font-family: 'Orbitron', sans-serif; letter-spacing: 0.5px;">Cảnh Báo Sản Phẩm Sắp Hết Hàng</h6>
+                                <small class="text-muted">Các món có số lượng tồn kho dưới 5 ly/phần cần được bổ sung nhanh</small>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="badge border px-3 py-2 rounded-pill fw-bold" style="background: rgba(239, 68, 68, 0.15); color: var(--accent-red); border-color: rgba(239, 68, 68, 0.3) !important;" id="tableItemCountBadge">
+                                0 món cần nhập
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-custom mb-0" id="lowStockTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 80px;" class="text-center">Mã ID</th>
+                                    <th>Tên Món Ăn / Thức Uống</th>
+                                    <th style="width: 170px;" class="text-center">Tồn Kho Hiện Tại</th>
+                                    <th style="width: 160px;" class="text-center">Tình Trạng</th>
+                                    <th style="width: 140px;" class="text-center">Số Lượng Nhập</th>
+                                    <th style="width: 180px;" class="text-center">Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lowStockTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Empty State: When all stocks are sufficient -->
+                    <div id="noLowStockState" class="text-center py-5 d-none">
+                        <div style="width: 64px; height: 64px; background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1rem; border: 1px solid rgba(16, 185, 129, 0.3);">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <h5 class="fw-bold">Kho hàng đầy đủ! 🎉</h5>
+                        <p class="text-muted small mb-0" style="max-width: 420px; margin: 0 auto;">
+                            Hiện tại không có món ăn nào có lượng tồn kho dưới 5. Tất cả sản phẩm đều sẵn sàng phục vụ khách hàng.
+                        </p>
+                    </div>
+
+                    <!-- Loading Spinner State -->
+                    <div id="tableLoadingState" class="p-4 text-center">
+                        <div class="spinner-border" style="color: var(--primary-color);" role="status"></div>
+                        <div class="text-muted small mt-2">Đang tải dữ liệu cảnh báo...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: MENU CRUD MANAGEMENT -->
+            <div class="tab-pane fade" id="tab-menu" role="tabpanel" aria-labelledby="tab-menu-btn">
+                <div class="table-card mb-4">
+                    <div class="table-card-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <div style="width: 34px; height: 34px; background: var(--primary-light); color: var(--primary-color); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                                <i class="bi bi-card-checklist"></i>
+                            </div>
+                            <div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <h6 class="fw-bold mb-0 text-uppercase" style="font-family: 'Orbitron', sans-serif; letter-spacing: 0.5px;">Quản Lý Thực Đơn Quán</h6>
+                                    <span class="badge border rounded-pill" style="background: var(--input-bg); border-color: var(--border-color) !important; color: var(--primary-color);" id="allProductsCountBadge">0 món</span>
+                                </div>
+                                <small class="text-muted">Danh sách toàn bộ món ăn, cập nhật giá, kho và thêm món mới</small>
+                            </div>
+                        </div>
+
+                        <!-- Add New Product Button -->
+                        <div class="d-flex align-items-center gap-2">
+                            <button class="btn btn-neon-primary rounded-pill px-4 py-2 fw-bold d-flex align-items-center gap-2 shadow-sm" onclick="openProductModal('create')">
+                                <i class="bi bi-plus-circle-fill fs-6"></i>
+                                <span>Thêm Món Mới</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Products Table -->
+                    <div class="table-responsive">
+                        <table class="table table-custom mb-0" id="allProductsTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 70px;" class="text-center">ID</th>
+                                    <th style="width: 80px;" class="text-center">Ảnh</th>
+                                    <th>Tên Món Ăn</th>
+                                    <th style="width: 150px;">Danh Mục</th>
+                                    <th style="width: 150px;">Đơn Giá</th>
+                                    <th style="width: 130px;" class="text-center">Tồn Kho</th>
+                                    <th style="width: 170px;" class="text-center">Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="allProductsTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Empty Menu State -->
+                    <div id="noProductsState" class="text-center py-5 d-none">
+                        <div style="font-size: 3.5rem;" class="mb-2">🍽️🍃</div>
+                        <h5 class="fw-bold">Thực đơn chưa có món ăn nào</h5>
+                        <p class="text-muted small">Hãy bấm nút "Thêm Món Mới" để bắt đầu cập nhật thực đơn quán.</p>
+                    </div>
+
+                    <!-- Menu Loading Spinner -->
+                    <div id="allProductsLoadingState" class="p-4 text-center">
+                        <div class="spinner-border" style="color: var(--primary-color);" role="status"></div>
+                        <div class="text-muted small mt-2">Đang tải danh sách thực đơn...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: CUSTOMER CHAT INTERFACE -->
+            <div class="tab-pane fade" id="tab-chat" role="tabpanel" aria-labelledby="tab-chat-btn">
+                <div class="chat-container-card mb-4">
+                    <div class="row g-0">
+                        <!-- Left Column: Customer List -->
+                        <div class="col-lg-4 col-md-5 customer-list-box">
+                            <!-- Customer Search Header -->
+                            <div class="p-3 border-bottom" style="border-color: var(--border-color) !important;">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <h6 class="fw-bold mb-0 d-flex align-items-center gap-2" style="color: var(--primary-color); font-family: 'Orbitron', sans-serif;">
+                                        <i class="bi bi-people-fill"></i>
+                                        <span>Khách Hàng Đã Nhắn</span>
+                                    </h6>
+                                    <button class="btn btn-sm btn-outline-secondary rounded-circle p-1 border" onclick="fetchChatCustomers()" title="Tải lại danh sách" style="width: 30px; height: 30px; border-color: var(--border-color); color: var(--text-main);">
+                                        <i class="bi bi-arrow-clockwise"></i>
+                                    </button>
+                                </div>
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text border-end-0"><i class="bi bi-search"></i></span>
+                                    <input type="text" id="customerSearchInput" class="form-control border-start-0" placeholder="Tìm tên hoặc email khách..." oninput="filterCustomers(this.value)">
+                                </div>
+                            </div>
+
+                            <!-- Customer Scroll List -->
+                            <div class="customer-list-scroll" id="chatCustomerList">
+                                <div class="text-center py-5">
+                                    <div class="spinner-border spinner-border-sm" style="color: var(--primary-color);" role="status"></div>
+                                    <small class="text-muted d-block mt-2">Đang tải danh sách khách hàng...</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Chat History & Input Area -->
+                        <div class="col-lg-8 col-md-7 chat-conversation-box">
+                            <!-- Empty Selection State -->
+                            <div id="chatEmptyState" class="d-flex flex-column align-items-center justify-content-center h-100 p-5 text-center">
+                                <div style="width: 80px; height: 80px; background: var(--primary-light); color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin-bottom: 1.25rem; border: 1px solid var(--border-glow);">
+                                    <i class="bi bi-chat-dots-fill"></i>
+                                </div>
+                                <h5 class="fw-bold mb-1">Chưa chọn khách hàng nào</h5>
+                                <p class="text-muted small mb-0" style="max-width: 380px;">
+                                    Vui lòng chọn một khách hàng từ danh sách bên trái để xem lịch sử trò chuyện và phản hồi tin nhắn tư vấn.
+                                </p>
+                            </div>
+
+                            <!-- Active Conversation Area -->
+                            <div id="chatActiveConversation" class="d-flex flex-column h-100 d-none">
+                                <!-- Conversation Header -->
+                                <div class="p-3 px-4 border-bottom d-flex align-items-center justify-content-between" style="background: var(--bg-card-solid); border-color: var(--border-color) !important;">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="cust-avatar" style="width: 40px; height: 40px; font-size: 1rem;" id="activeChatAvatar">
+                                            K
+                                        </div>
+                                        <div>
+                                            <h6 class="fw-bold mb-0" id="activeChatCustomerName">Khách hàng</h6>
+                                            <small class="text-muted" id="activeChatCustomerEmail" style="font-size: 0.78rem;">email@example.com</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="badge border rounded-pill px-2 py-1 small" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border-color: rgba(16, 185, 129, 0.3) !important;">
+                                            <i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> Trực tuyến
+                                        </span>
+                                        <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" onclick="loadCustomerMessages(selectedCustomerId)" style="border-color: var(--border-color); color: var(--text-main);">
+                                            <i class="bi bi-arrow-clockwise me-1"></i> Làm mới
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Messages History Scroll Area -->
+                                <div class="chat-history-area" id="adminChatMessagesArea">
+                                    <!-- Populated by JS -->
+                                </div>
+
+                                <!-- Input Box Area -->
+                                <div class="chat-input-box">
+                                    <form id="adminChatForm" onsubmit="handleAdminSendChat(event)" class="d-flex gap-2">
+                                        <input type="text" id="adminChatInput" class="form-control rounded-pill px-3 py-2" placeholder="Nhập tin nhắn trả lời khách hàng..." autocomplete="off" required>
+                                        <button type="submit" id="btnAdminSendChat" class="btn btn-neon-primary rounded-pill px-4 fw-bold d-flex align-items-center gap-2 shadow-sm">
+                                            <i class="bi bi-send-fill"></i>
+                                            <span class="d-none d-sm-inline">Gửi</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- PRODUCT MODAL (ADD & EDIT) -->
+    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 500px;">
+            <div class="modal-content">
+                <div class="modal-header py-3 px-4">
+                    <div class="d-flex align-items-center gap-2">
+                        <div style="width: 32px; height: 32px; background: var(--primary-light); color: var(--primary-color); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-cup-hot" id="productModalIcon"></i>
+                        </div>
+                        <h5 class="modal-title fw-bold" id="productModalLabel">Thêm Món Mới</h5>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <form id="productForm" onsubmit="handleSaveProduct(event)">
+                    <div class="modal-body p-4">
+                        <input type="hidden" id="modalProductId">
+
+                        <!-- Product Name -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Tên món ăn <span class="text-danger">*</span></label>
+                            <input type="text" id="modalProductName" class="form-control" placeholder="VD: Trà sữa trân châu hoàng kim" required>
+                        </div>
+
+                        <!-- Category Selection -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Danh mục <span class="text-danger">*</span></label>
+                            <select id="modalProductCategory" class="form-select" required>
+                                <option value="" disabled selected>-- Chọn danh mục --</option>
+                                <option value="1">Trà sữa</option>
+                                <option value="2">Thức ăn</option>
+                            </select>
+                        </div>
+
+                        <!-- Price & Stock Row -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <label class="form-label fw-semibold small">Giá bán (VNĐ) <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <input type="number" id="modalProductPrice" class="form-control" placeholder="25000" min="0" step="500" required>
+                                    <span class="input-group-text small">₫</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-semibold small">Số lượng tồn kho <span class="text-danger">*</span></label>
+                                <input type="number" id="modalProductStock" class="form-control" placeholder="20" min="0" required>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Mô tả món ăn</label>
+                            <textarea id="modalProductDescription" class="form-control" rows="2" placeholder="Thành phần, hương vị đặc trưng..."></textarea>
+                        </div>
+
+                        <!-- Image Upload -->
+                        <div class="mb-2">
+                            <label class="form-label fw-semibold small">Hình ảnh sản phẩm</label>
+                            <input type="file" id="modalProductImage" class="form-control" accept="image/*">
+                            <div id="modalCurrentImagePreview" class="mt-2 d-none">
+                                <small class="text-muted d-block mb-1">Ảnh hiện tại:</small>
+                                <img id="previewImageTag" src="" class="rounded-3 border object-fit-cover" style="width: 60px; height: 60px; border-color: var(--border-color) !important;" alt="Preview">
+                            </div>
+                        </div>
+
+                        <!-- Modal Error Box -->
+                        <div id="productModalAlert" class="alert alert-danger py-2 small d-none mt-3" role="alert"></div>
+                    </div>
+
+                    <div class="modal-footer py-3 px-4">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">Hủy bỏ</button>
+                        <button type="submit" id="btnSaveProduct" class="btn btn-neon-primary rounded-pill px-4 fw-bold d-flex align-items-center gap-2">
+                            <span id="btnSaveProductText">Lưu Sản Phẩm</span>
+                            <span id="btnSaveProductSpinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- DELETE CONFIRMATION MODAL -->
+    <div class="modal fade" id="deleteProductModal" tabindex="-1" aria-labelledby="deleteProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
+            <div class="modal-content text-center p-4">
+                <div class="mb-3">
+                    <div style="width: 60px; height: 60px; background: rgba(239, 68, 68, 0.15); color: var(--accent-red); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto; border: 1px solid rgba(239, 68, 68, 0.3);">
+                        <i class="bi bi-trash3-fill"></i>
+                    </div>
+                </div>
+                <h5 class="fw-bold mb-2">Xác Nhận Xóa Món?</h5>
+                <p class="text-muted small mb-4">
+                    Bạn có chắc chắn muốn xóa món <strong id="deleteProductNameText" style="color: var(--accent-red);">...</strong> khỏi thực đơn? Thao tác này không thể hoàn tác.
+                </p>
+
+                <div class="d-flex gap-2 justify-content-center">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" id="btnConfirmDelete" class="btn btn-danger rounded-pill px-4 fw-bold" onclick="executeDeleteProduct()">
+                        <span id="btnDeleteText">Xác Nhận Xóa</span>
+                        <span id="btnDeleteSpinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="border-top py-3 mt-auto" style="background: var(--bg-card-solid); border-color: var(--border-color) !important;">
+        <div class="container-fluid px-lg-5 text-center text-muted small">
+            <span>Boba &amp; Bites Store Management System © 2026 | Endfield Edition</span>
+        </div>
+    </footer>
+
+    <!-- TOAST NOTIFICATIONS CONTAINER -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100;">
+        <div id="adminToast" class="toast align-items-center text-white border-0" role="alert" aria-live="assertive" aria-atomic="true" style="background: var(--bg-card-solid); border: 1px solid var(--border-color) !important; border-radius: 12px; box-shadow: var(--card-shadow);">
+            <div class="d-flex">
+                <div class="toast-body d-flex align-items-center gap-2" id="adminToastMessage">
+                    <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                    <span>Thông báo</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto shadow-none" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- ADMIN LOGIC JS -->
+    <script>
+        const authToken = localStorage.getItem('access_token');
+        const authUser = localStorage.getItem('auth_user') || 'Admin';
+
+        let adminProductsList = [];
+        let productModalMode = 'create'; // 'create' | 'edit'
+        let productToDeleteId = null;
+
+        // Chat State
+        let adminChatCustomers = [];
+        let selectedCustomerId = null;
+        let selectedCustomerObj = null;
+        let adminChatPolling = null;
+
+        // Chart.js Instance
+        let revenueChartInstance = null;
+
+        // Emoji mapping for product & categories
+        const categoryEmojis = {
+            'Trà sữa': '🧋',
+            'Thức ăn': '🍱',
+            'Bánh ngọt': '🍰',
+            'Cà phê': '☕'
+        };
+
+        const productIcons = {
+            'Trà sữa truyền thống': '🧋',
+            'Trà sữa thái xanh': '🍵',
+            'Trà sữa ô long': '🧋',
+            'Bánh bông lan': '🍰',
+            'Khoai tây chiên': '🍟',
+            'Gà rán': '🍗'
+        };
+
+        function getProductEmoji(name, catName) {
+            if (productIcons[name]) return productIcons[name];
+            if (catName && catName.toLowerCase().includes('trà sữa')) return '🧋';
+            if (catName && catName.toLowerCase().includes('thức ăn')) return '🍱';
+            return '🍽️';
+        }
+
+        // Theme Toggle Handler
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+            if (revenueChartInstance) {
+                fetchAnalyticsData(); // Re-render chart with matching theme colors
+            }
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('themeIcon');
+            if (theme === 'dark') {
+                icon.className = 'bi bi-sun-fill text-warning';
+            } else {
+                icon.className = 'bi bi-moon-stars-fill text-dark';
+            }
+        }
+
+        // Format VND Currency
+        function formatVND(amount) {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount || 0);
+        }
+
+        // Escape HTML
+        function escapeHtml(text) {
+            if (!text) return '';
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.toString().replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // Show Toast Notification
+        function showToast(message, type = 'success') {
+            const toastEl = document.getElementById('adminToast');
+            const toastMsg = document.getElementById('adminToastMessage');
+            
+            let icon = '<i class="bi bi-check-circle-fill text-success fs-5"></i>';
+            if (type === 'danger') icon = '<i class="bi bi-exclamation-triangle-fill text-danger fs-5"></i>';
+            if (type === 'info') icon = '<i class="bi bi-info-circle-fill text-info fs-5"></i>';
+            if (type === 'warning') icon = '<i class="bi bi-exclamation-circle-fill text-warning fs-5"></i>';
+
+            toastMsg.innerHTML = `${icon} <span>${message}</span>`;
+            
+            const toast = new bootstrap.Toast(toastEl, { delay: 3500 });
+            toast.show();
+        }
+
+        // Initialize Page
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            updateThemeIcon(savedTheme);
+
+            // Display User Info
+            document.getElementById('adminUsername').textContent = authUser;
+            document.getElementById('adminAvatar').textContent = authUser.charAt(0).toUpperCase();
+
+            // Display Date
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('currentDate').textContent = dateStr;
+
+            // Fetch All Initial Data
+            refreshAllData();
+            fetchChatCustomers();
+
+            document.querySelectorAll('#adminTabs button[data-bs-toggle="pill"]').forEach(tab => {
+                tab.addEventListener('shown.bs.tab', event => {
+                    const target = event.target.getAttribute('data-bs-target');
+                    if (target === '#tab-overview') {
+                        fetchAnalyticsData();
+                    }
+                });
+            });
+        });
+
+        function refreshAllData() {
+            fetchDashboardData();
+            fetchAnalyticsData();
+            fetchAdminProducts();
+            fetchChatCustomers();
+        }
+
+        // ==========================================
+        // 1. DASHBOARD STATS: GET /api/admin/dashboard/
+        // ==========================================
+        async function fetchDashboardData() {
+            const refreshIcon = document.getElementById('refreshIcon');
+            const loadingEl = document.getElementById('tableLoadingState');
+            const tableEl = document.getElementById('lowStockTable');
+            const emptyEl = document.getElementById('noLowStockState');
+
+            refreshIcon.classList.add('bi-arrow-clockwise', 'spinner-border', 'spinner-border-sm', 'border-0');
+            loadingEl.classList.remove('d-none');
+            tableEl.classList.add('d-none');
+            emptyEl.classList.add('d-none');
+
+            try {
+                const response = await fetch('/api/admin/dashboard/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                if (response.status === 401 || response.status === 403) {
+                    showToast('Phiên làm việc hết hạn hoặc bạn không có quyền Admin!', 'danger');
+                    setTimeout(() => {
+                        handleLogout();
+                    }, 1500);
+                    return;
+                }
+
+                if (!response.ok) throw new Error('Không thể tải dữ liệu thống kê');
+
+                const data = await response.json();
+                renderDashboardStats(data);
+            } catch (error) {
+                console.error('Error fetching dashboard:', error);
+                showToast('Lỗi khi tải dữ liệu từ máy chủ!', 'danger');
+            } finally {
+                refreshIcon.classList.remove('spinner-border', 'spinner-border-sm', 'border-0');
+                loadingEl.classList.add('d-none');
+            }
+        }
+
+        function renderDashboardStats(data) {
+            document.getElementById('statRevenue').textContent = formatVND(data.total_revenue);
+            document.getElementById('statOrders').textContent = (data.total_orders || 0).toLocaleString('vi-VN');
+            document.getElementById('statProducts').textContent = (data.total_products || 0).toLocaleString('vi-VN');
+            
+            const lowStockList = data.low_stock_products || [];
+            document.getElementById('statLowStockCount').textContent = lowStockList.length;
+            document.getElementById('tableItemCountBadge').textContent = `${lowStockList.length} món cần nhập`;
+
+            const tableEl = document.getElementById('lowStockTable');
+            const tbodyEl = document.getElementById('lowStockTableBody');
+            const emptyEl = document.getElementById('noLowStockState');
+
+            if (lowStockList.length === 0) {
+                tableEl.classList.add('d-none');
+                emptyEl.classList.remove('d-none');
+                return;
+            }
+
+            emptyEl.classList.add('d-none');
+            tableEl.classList.remove('d-none');
+
+            tbodyEl.innerHTML = lowStockList.map(item => {
+                const isOutOfStock = item.stock <= 0;
+                const statusBadge = isOutOfStock 
+                    ? `<span class="badge bg-danger text-white px-2 py-1 rounded-pill pulse-danger"><i class="bi bi-x-circle me-1"></i>Hết Hàng</span>`
+                    : `<span class="badge bg-warning text-dark px-2 py-1 rounded-pill"><i class="bi bi-exclamation-triangle me-1"></i>Sắp hết</span>`;
+
+                return `
+                    <tr id="lowstock-row-${item.id}">
+                        <td class="text-center fw-bold text-muted">#${item.id}</td>
+                        <td>
+                            <div class="fw-bold fs-6">${item.name}</div>
+                            <small class="text-muted">Mã món: SP-${item.id}</small>
+                        </td>
+                        <td class="text-center">
+                            <span class="fs-5 fw-extrabold ${isOutOfStock ? 'text-danger' : 'text-warning'}">
+                                ${item.stock}
+                            </span>
+                            <span class="text-muted small"> phần</span>
+                        </td>
+                        <td class="text-center">
+                            ${statusBadge}
+                        </td>
+                        <td class="text-center">
+                            <input type="number" id="restock-input-${item.id}" class="input-restock" min="1" max="999" value="10" placeholder="10">
+                        </td>
+                        <td class="text-center">
+                            <button id="btn-restock-${item.id}" class="btn-restock" onclick="handleRestock(${item.id}, '${item.name}')">
+                                <i class="bi bi-plus-circle-fill"></i>
+                                <span>Bổ Sung Hàng</span>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // ==========================================
+        // 2. ADVANCED ANALYTICS: GET /api/admin/analytics/
+        // ==========================================
+        async function fetchAnalyticsData() {
+            try {
+                const response = await fetch('/api/admin/analytics/', {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                if (!response.ok) return;
+
+                const data = await response.json();
+                renderRevenueChart(data.daily_stats || []);
+                renderTopProducts(data.top_products || []);
+            } catch (err) {
+                console.error('Error fetching analytics:', err);
+            }
+        }
+
+        function renderRevenueChart(dailyStats) {
+            // Sort chronologically (oldest to newest)
+            const sortedStats = [...dailyStats].reverse();
+            
+            const labels = sortedStats.map(s => {
+                if (!s.date) return '';
+                const parts = s.date.split('-');
+                return parts.length === 3 ? `${parts[2]}/${parts[1]}` : s.date;
+            });
+            const revenues = sortedStats.map(s => s.total_revenue || 0);
+            const orders = sortedStats.map(s => s.total_orders || 0);
+
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            const isDark = (document.documentElement.getAttribute('data-theme') || 'dark') === 'dark';
+
+            if (revenueChartInstance) {
+                revenueChartInstance.destroy();
+            }
+
+            // If empty data, provide default labels
+            if (labels.length === 0) {
+                labels.push('Hôm nay');
+                revenues.push(0);
+                orders.push(0);
+            }
+
+            // Create gradient
+            const gradient = ctx.createLinearGradient(0, 0, 0, 260);
+            gradient.addColorStop(0, isDark ? 'rgba(255, 230, 0, 0.45)' : 'rgba(234, 179, 8, 0.45)');
+            gradient.addColorStop(1, isDark ? 'rgba(255, 230, 0, 0.0)' : 'rgba(234, 179, 8, 0.0)');
+
+            revenueChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Doanh Thu (VNĐ)',
+                            data: revenues,
+                            borderColor: isDark ? '#ffe600' : '#eab308',
+                            backgroundColor: gradient,
+                            fill: true,
+                            tension: 0.35,
+                            borderWidth: 3,
+                            pointBackgroundColor: isDark ? '#ffe600' : '#eab308',
+                            pointBorderColor: isDark ? '#0b0e14' : '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Số Đơn Hàng',
+                            data: orders,
+                            type: 'bar',
+                            backgroundColor: isDark ? 'rgba(0, 240, 255, 0.3)' : 'rgba(2, 132, 199, 0.25)',
+                            borderColor: isDark ? '#00f0ff' : '#0284c7',
+                            borderWidth: 1,
+                            borderRadius: 6,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: isDark ? '#c9d1d9' : '#475569',
+                                font: {
+                                    family: 'Plus Jakarta Sans',
+                                    weight: '600',
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: isDark ? 'rgba(13, 17, 23, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                            titleColor: isDark ? '#ffe600' : '#0f172a',
+                            bodyColor: isDark ? '#f0f6fc' : '#334155',
+                            borderColor: isDark ? '#30363d' : '#e2e8f0',
+                            borderWidth: 1,
+                            padding: 12,
+                            boxPadding: 6,
+                            usePointStyle: true,
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.dataset.yAxisID === 'y') {
+                                        return ` Doanh thu: ${formatVND(context.parsed.y)}`;
+                                    } else {
+                                        return ` Số đơn: ${context.parsed.y} đơn`;
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                color: isDark ? '#8b949e' : '#64748b',
+                                font: { family: 'Plus Jakarta Sans', weight: '500' }
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            grid: {
+                                color: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                color: isDark ? '#8b949e' : '#64748b',
+                                callback: function(value) {
+                                    return value >= 1000000 ? (value / 1000000) + 'M' : (value >= 1000 ? (value / 1000) + 'k' : value);
+                                }
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            grid: {
+                                drawOnChartArea: false
+                            },
+                            ticks: {
+                                color: isDark ? '#00f0ff' : '#0284c7',
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderTopProducts(topProducts) {
+            const tbody = document.getElementById('topProductsTableBody');
+            if (!topProducts || topProducts.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="3" class="text-center py-4 text-muted small">
+                            Chưa có dữ liệu sản phẩm bán ra.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = topProducts.map((p, idx) => {
+                const rank = idx + 1;
+                let rankBadgeClass = 'rank-other';
+                if (rank === 1) rankBadgeClass = 'rank-1';
+                else if (rank === 2) rankBadgeClass = 'rank-2';
+                else if (rank === 3) rankBadgeClass = 'rank-3';
+
+                return `
+                    <tr>
+                        <td class="text-center">
+                            <span class="rank-badge ${rankBadgeClass}">${rank}</span>
+                        </td>
+                        <td>
+                            <div class="fw-bold text-truncate" style="max-width: 140px;">${escapeHtml(p.name)}</div>
+                            <small class="text-muted">Mã: #${p.id}</small>
+                        </td>
+                        <td class="text-end">
+                            <span class="fw-bold" style="color: var(--primary-color);">${p.sold_count || 0}</span>
+                            <small class="text-muted"> ly</small>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // ==========================================
+        // 3. PRODUCT CRUD: GET /api/admin/products/
+        // ==========================================
+        async function fetchAdminProducts() {
+            const loadingEl = document.getElementById('allProductsLoadingState');
+            const tableEl = document.getElementById('allProductsTable');
+            const emptyEl = document.getElementById('noProductsState');
+            const tbodyEl = document.getElementById('allProductsTableBody');
+
+            loadingEl.classList.remove('d-none');
+            tableEl.classList.add('d-none');
+            emptyEl.classList.add('d-none');
+
+            try {
+                const response = await fetch('/api/admin/products/', {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                if (!response.ok) throw new Error('Không thể tải danh sách thực đơn');
+
+                adminProductsList = await response.json();
+                document.getElementById('allProductsCountBadge').textContent = `${adminProductsList.length} món`;
+
+                if (adminProductsList.length === 0) {
+                    emptyEl.classList.remove('d-none');
+                    return;
+                }
+
+                tableEl.classList.remove('d-none');
+                tbodyEl.innerHTML = adminProductsList.map(p => {
+                    const catBadgeClass = (p.category_name && p.category_name.toLowerCase().includes('trà sữa')) 
+                        ? 'badge-cat-tra-sua' 
+                        : 'badge-cat-thuc-an';
+
+                    const stockBadge = p.stock <= 0
+                        ? `<span class="badge bg-danger text-white rounded-pill px-2 py-1">Hết hàng (0)</span>`
+                        : (p.stock < 5 
+                            ? `<span class="badge bg-warning text-dark rounded-pill px-2 py-1">Còn ${p.stock}</span>`
+                            : `<span class="badge rounded-pill px-2 py-1" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.3);">Còn ${p.stock}</span>`);
+
+                    const imageEl = p.image 
+                        ? `<img src="${p.image}" class="product-thumb" alt="${p.name}">`
+                        : `<div class="product-thumb">${getProductEmoji(p.name, p.category_name)}</div>`;
+
+                    return `
+                        <tr>
+                            <td class="text-center fw-bold text-muted">#${p.id}</td>
+                            <td class="text-center">${imageEl}</td>
+                            <td>
+                                <div class="fw-bold fs-6">${escapeHtml(p.name)}</div>
+                                <small class="text-muted text-truncate d-inline-block" style="max-width: 250px;">${escapeHtml(p.description || 'Không có mô tả')}</small>
+                            </td>
+                            <td>
+                                <span class="badge ${catBadgeClass} rounded-pill px-2 py-1 fw-semibold">
+                                    ${escapeHtml(p.category_name || 'Khác')}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="fw-bold" style="color: var(--accent-red);">${formatVND(p.price)}</span>
+                            </td>
+                            <td class="text-center">
+                                ${stockBadge}
+                            </td>
+                            <td class="text-center">
+                                <div class="d-flex align-items-center justify-content-center gap-2">
+                                    <button class="btn btn-outline-warning btn-sm rounded-pill px-3 d-flex align-items-center gap-1 shadow-none" onclick='openProductModal("edit", ${JSON.stringify(p).replace(/'/g, "&apos;")})'>
+                                        <i class="bi bi-pencil-square"></i>
+                                        <span>Sửa</span>
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm rounded-pill px-3 d-flex align-items-center gap-1 shadow-none" onclick="openDeleteModal(${p.id}, '${p.name.replace(/'/g, "\\'")}')">
+                                        <i class="bi bi-trash3"></i>
+                                        <span>Xóa</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error('Error fetching admin products:', error);
+                showToast('Lỗi khi tải danh sách món ăn!', 'danger');
+            } finally {
+                loadingEl.classList.add('d-none');
+            }
+        }
+
+        function openProductModal(mode = 'create', product = null) {
+            productModalMode = mode;
+            const form = document.getElementById('productForm');
+            form.reset();
+            document.getElementById('productModalAlert').classList.add('d-none');
+            document.getElementById('modalCurrentImagePreview').classList.add('d-none');
+
+            const titleEl = document.getElementById('productModalLabel');
+            const submitTextEl = document.getElementById('btnSaveProductText');
+
+            if (mode === 'edit' && product) {
+                titleEl.textContent = 'Chỉnh Sửa Món Ăn';
+                submitTextEl.textContent = 'Cập Nhật Món';
+                document.getElementById('modalProductId').value = product.id;
+                document.getElementById('modalProductName').value = product.name;
+                document.getElementById('modalProductCategory').value = product.category || 1;
+                document.getElementById('modalProductPrice').value = product.price;
+                document.getElementById('modalProductStock').value = product.stock;
+                document.getElementById('modalProductDescription').value = product.description || '';
+
+                if (product.image) {
+                    document.getElementById('modalCurrentImagePreview').classList.remove('d-none');
+                    document.getElementById('previewImageTag').src = product.image;
+                }
+            } else {
+                titleEl.textContent = 'Thêm Món Mới';
+                submitTextEl.textContent = 'Thêm Vào Thực Đơn';
+                document.getElementById('modalProductId').value = '';
+                document.getElementById('modalProductCategory').value = '1';
+            }
+
+            const modal = new bootstrap.Modal(document.getElementById('productModal'));
+            modal.show();
+        }
+
+        async function handleSaveProduct(e) {
+            e.preventDefault();
+            const id = document.getElementById('modalProductId').value;
+            const name = document.getElementById('modalProductName').value.trim();
+            const category = document.getElementById('modalProductCategory').value;
+            const price = document.getElementById('modalProductPrice').value;
+            const stock = document.getElementById('modalProductStock').value;
+            const description = document.getElementById('modalProductDescription').value.trim();
+            const imageFile = document.getElementById('modalProductImage').files[0];
+
+            const alertBox = document.getElementById('productModalAlert');
+            const btnSubmit = document.getElementById('btnSaveProduct');
+            const btnText = document.getElementById('btnSaveProductText');
+            const btnSpinner = document.getElementById('btnSaveProductSpinner');
+
+            alertBox.classList.add('d-none');
+            btnSubmit.disabled = true;
+            btnText.classList.add('d-none');
+            btnSpinner.classList.remove('d-none');
+
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('category', category);
+            formData.append('price', price);
+            formData.append('stock', stock);
+            formData.append('description', description);
+            if (imageFile) {
+                formData.append('image', imageFile);
+            }
+
+            const isEdit = (productModalMode === 'edit' && id);
+            const url = isEdit ? `/api/admin/products/${id}/` : '/api/admin/products/';
+            const method = isEdit ? 'PATCH' : 'POST';
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok || response.status === 201) {
+                    const modalEl = bootstrap.Modal.getInstance(document.getElementById('productModal'));
+                    if (modalEl) modalEl.hide();
+
+                    showToast(isEdit ? `Đã cập nhật món "${name}" thành công!` : `Đã thêm món "${name}" vào thực đơn!`, 'success');
+                    refreshAllData();
+                } else {
+                    let errMsg = 'Có lỗi xảy ra khi lưu món ăn!';
+                    if (data.name) errMsg = Array.isArray(data.name) ? data.name[0] : data.name;
+                    else if (data.price) errMsg = Array.isArray(data.price) ? data.price[0] : data.price;
+                    else if (data.category) errMsg = Array.isArray(data.category) ? data.category[0] : data.category;
+                    else if (data.error) errMsg = data.error;
+
+                    alertBox.textContent = errMsg;
+                    alertBox.classList.remove('d-none');
+                }
+            } catch (error) {
+                console.error('Save product error:', error);
+                alertBox.textContent = 'Lỗi kết nối máy chủ khi lưu sản phẩm!';
+                alertBox.classList.remove('d-none');
+            } finally {
+                btnSubmit.disabled = false;
+                btnText.classList.remove('d-none');
+                btnSpinner.classList.add('d-none');
+            }
+        }
+
+        function openDeleteModal(productId, productName) {
+            productToDeleteId = productId;
+            document.getElementById('deleteProductNameText').textContent = `"${productName}"`;
+            const modal = new bootstrap.Modal(document.getElementById('deleteProductModal'));
+            modal.show();
+        }
+
+        async function executeDeleteProduct() {
+            if (!productToDeleteId) return;
+
+            const btnConfirm = document.getElementById('btnConfirmDelete');
+            const btnText = document.getElementById('btnDeleteText');
+            const btnSpinner = document.getElementById('btnDeleteSpinner');
+
+            btnConfirm.disabled = true;
+            btnText.classList.add('d-none');
+            btnSpinner.classList.remove('d-none');
+
+            try {
+                const response = await fetch(`/api/admin/products/${productToDeleteId}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                if (response.ok || response.status === 204) {
+                    const modalEl = bootstrap.Modal.getInstance(document.getElementById('deleteProductModal'));
+                    if (modalEl) modalEl.hide();
+
+                    showToast('Đã xóa món ăn khỏi thực đơn!', 'info');
+                    refreshAllData();
+                } else {
+                    showToast('Không thể xóa món ăn này!', 'danger');
+                }
+            } catch (error) {
+                console.error('Delete product error:', error);
+                showToast('Lỗi kết nối máy chủ khi xóa món ăn!', 'danger');
+            } finally {
+                btnConfirm.disabled = false;
+                btnText.classList.remove('d-none');
+                btnSpinner.classList.add('d-none');
+                productToDeleteId = null;
+            }
+        }
+
+        async function handleRestock(productId, productName) {
+            const inputEl = document.getElementById(`restock-input-${productId}`);
+            const btnEl = document.getElementById(`btn-restock-${productId}`);
+            const amount = parseInt(inputEl.value, 10);
+
+            if (isNaN(amount) || amount <= 0) {
+                showToast('Số lượng nhập phải lớn hơn 0!', 'danger');
+                inputEl.focus();
+                return;
+            }
+
+            const originalBtnHtml = btnEl.innerHTML;
+            btnEl.disabled = true;
+            btnEl.innerHTML = `<span class="spinner-border spinner-border-sm" role="status"></span> Đang nhập...`;
+
+            try {
+                const response = await fetch(`/api/admin/products/${productId}/restock/`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ amount: amount })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showToast(data.message || `Đã nhập thêm ${amount} phần cho ${productName}!`, 'success');
+                    refreshAllData();
+                } else {
+                    const errorMsg = data.error || 'Có lỗi xảy ra khi bổ sung hàng!';
+                    showToast(errorMsg, 'danger');
+                }
+            } catch (error) {
+                console.error('Restock error:', error);
+                showToast('Lỗi kết nối máy chủ khi nhập kho!', 'danger');
+            } finally {
+                if (btnEl) {
+                    btnEl.disabled = false;
+                    btnEl.innerHTML = originalBtnHtml;
+                }
+            }
+        }
+
+        // ==========================================
+        // 4. ADMIN CHAT WITH CUSTOMERS
+        // ==========================================
+
+        function onOpenChatTab() {
+            fetchChatCustomers();
+        }
+
+        async function fetchChatCustomers() {
+            try {
+                const res = await fetch('/api/admin/chat/customers/', {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                if (!res.ok) return;
+
+                adminChatCustomers = await res.json();
+                document.getElementById('chatCustomerCountBadge').textContent = adminChatCustomers.length;
+                renderCustomerList(adminChatCustomers);
+            } catch (err) {
+                console.error('Error fetching chat customers:', err);
+            }
+        }
+
+        function filterCustomers(query) {
+            const q = (query || '').toLowerCase().trim();
+            if (!q) {
+                renderCustomerList(adminChatCustomers);
+                return;
+            }
+            const filtered = adminChatCustomers.filter(c => 
+                (c.username && c.username.toLowerCase().includes(q)) || 
+                (c.email && c.email.toLowerCase().includes(q))
+            );
+            renderCustomerList(filtered);
+        }
+
+        function renderCustomerList(list) {
+            const listEl = document.getElementById('chatCustomerList');
+            if (!list || list.length === 0) {
+                listEl.innerHTML = `
+                    <div class="text-center py-5 text-muted">
+                        <i class="bi bi-chat-square-dots fs-1 d-block mb-2 opacity-50" style="color: var(--primary-color);"></i>
+                        <p class="small mb-0">Chưa có khách hàng nào nhắn tin.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            listEl.innerHTML = list.map(c => {
+                const initial = (c.username || 'K').charAt(0).toUpperCase();
+                const isActive = (selectedCustomerId === c.id);
+                return `
+                    <div class="customer-item ${isActive ? 'active' : ''}" onclick="selectCustomerForChat(${c.id})">
+                        <div class="cust-avatar">${initial}</div>
+                        <div class="flex-grow-1 text-truncate">
+                            <div class="fw-bold text-truncate">${escapeHtml(c.username)}</div>
+                            <small class="text-muted text-truncate d-block" style="font-size: 0.75rem;">${escapeHtml(c.email || 'Khách hàng')}</small>
+                        </div>
+                        <i class="bi bi-chevron-right text-muted small"></i>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selectCustomerForChat(customerId) {
+            selectedCustomerId = customerId;
+            selectedCustomerObj = adminChatCustomers.find(c => c.id === customerId);
+
+            renderCustomerList(adminChatCustomers);
+
+            document.getElementById('chatEmptyState').classList.add('d-none');
+            document.getElementById('chatActiveConversation').classList.remove('d-none');
+
+            if (selectedCustomerObj) {
+                document.getElementById('activeChatCustomerName').textContent = selectedCustomerObj.username;
+                document.getElementById('activeChatCustomerEmail').textContent = selectedCustomerObj.email || 'Khách hàng';
+                document.getElementById('activeChatAvatar').textContent = (selectedCustomerObj.username || 'K').charAt(0).toUpperCase();
+            }
+
+            loadCustomerMessages(customerId);
+
+            if (adminChatPolling) clearInterval(adminChatPolling);
+            adminChatPolling = setInterval(() => {
+                if (selectedCustomerId) {
+                    loadCustomerMessages(selectedCustomerId, true);
+                }
+            }, 3500);
+
+            setTimeout(() => {
+                const inp = document.getElementById('adminChatInput');
+                if (inp) inp.focus();
+            }, 100);
+        }
+
+        async function loadCustomerMessages(customerId, isBackground = false) {
+            const msgContainer = document.getElementById('adminChatMessagesArea');
+            if (!isBackground) {
+                msgContainer.innerHTML = `
+                    <div class="text-center py-5">
+                        <div class="spinner-border spinner-border-sm" style="color: var(--primary-color);" role="status"></div>
+                        <small class="text-muted ms-2">Đang tải lịch sử tin nhắn...</small>
+                    </div>
+                `;
+            }
+
+            try {
+                const res = await fetch(`/api/admin/chat/?user_id=${customerId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                if (!res.ok) throw new Error('Không thể tải tin nhắn');
+
+                const messages = await res.json();
+
+                if (messages.length === 0) {
+                    msgContainer.innerHTML = `
+                        <div class="text-center py-5 text-muted">
+                            <i class="bi bi-chat-text fs-2 d-block mb-1 opacity-50" style="color: var(--primary-color);"></i>
+                            <p class="small mb-0">Chưa có tin nhắn nào với khách hàng này.</p>
+                            <small>Hãy gửi lời chào hoặc phản hồi câu hỏi của khách hàng!</small>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const isScrolledToBottom = (msgContainer.scrollHeight - msgContainer.clientHeight <= msgContainer.scrollTop + 60);
+
+                msgContainer.innerHTML = messages.map(m => {
+                    const isAdminSender = (m.sender_username === authUser) || (m.receiver === customerId);
+                    const timeStr = m.created_at ? new Date(m.created_at).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) : '';
+
+                    if (isAdminSender) {
+                        return `
+                            <div class="bubble-admin">
+                                <div>${escapeHtml(m.message)}</div>
+                                <span class="bubble-meta"><i class="bi bi-check2 me-1"></i>${timeStr}</span>
+                            </div>
+                        `;
+                    } else {
+                        return `
+                            <div class="bubble-customer">
+                                <small class="fw-bold d-block mb-1" style="font-size: 0.75rem; color: var(--primary-color);">${escapeHtml(m.sender_username || 'Khách hàng')}</small>
+                                <div>${escapeHtml(m.message)}</div>
+                                <span class="bubble-meta">${timeStr}</span>
+                            </div>
+                        `;
+                    }
+                }).join('');
+
+                if (!isBackground || isScrolledToBottom) {
+                    msgContainer.scrollTop = msgContainer.scrollHeight;
+                }
+            } catch (err) {
+                console.error('Load customer messages error:', err);
+            }
+        }
+
+        async function handleAdminSendChat(e) {
+            e.preventDefault();
+            if (!selectedCustomerId) {
+                showToast('Vui lòng chọn khách hàng để nhắn tin!', 'warning');
+                return;
+            }
+
+            const input = document.getElementById('adminChatInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            input.value = '';
+
+            const btn = document.getElementById('btnAdminSendChat');
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/admin/chat/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        receiver_id: selectedCustomerId,
+                        message: message
+                    })
+                });
+
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.detail || err.error || err.receiver_id || 'Không thể gửi tin nhắn');
+                }
+
+                await loadCustomerMessages(selectedCustomerId);
+            } catch (err) {
+                console.error('Send chat error:', err);
+                showToast(err.message || 'Lỗi gửi tin nhắn!', 'danger');
+            } finally {
+                btn.disabled = false;
+                input.focus();
+            }
+        }
+
+        // Handle Logout
+        function handleLogout() {
+            if (adminChatPolling) clearInterval(adminChatPolling);
+            localStorage.clear();
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>

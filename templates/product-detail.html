@@ -1,0 +1,1887 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Món Ăn - Boba &amp; Bites | Endfield Edition</title>
+    
+    <!-- Instant Theme Detection -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+
+    <!-- Google Fonts: Plus Jakarta Sans & Orbitron -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        :root {
+            /* Endfield Sci-Fi Dark Theme (Default) */
+            --bg-body: #0b0e14;
+            --bg-card: rgba(22, 27, 34, 0.85);
+            --bg-card-solid: #161b22;
+            --bg-card-hover: #1c2128;
+            --border-color: #30363d;
+            --border-glow: rgba(255, 230, 0, 0.35);
+            --text-main: #f0f6fc;
+            --text-muted: #8b949e;
+            --text-light: #c9d1d9;
+            --primary-color: #ffe600; /* Neon Yellow */
+            --primary-hover: #ffd000;
+            --primary-text: #0b0e14;
+            --primary-light: rgba(255, 230, 0, 0.12);
+            --accent-cyan: #00f0ff;
+            --accent-purple: #a855f7;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            --navbar-bg: rgba(11, 14, 20, 0.88);
+            --input-bg: #0d1117;
+            --input-border: #30363d;
+            --radius-default: 18px;
+        }
+
+        [data-theme="light"] {
+            --bg-body: #f8fafc;
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --bg-card-solid: #ffffff;
+            --bg-card-hover: #ffffff;
+            --border-color: #e2e8f0;
+            --border-glow: rgba(234, 179, 8, 0.4);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --text-light: #334155;
+            --primary-color: #eab308;
+            --primary-hover: #ca8a04;
+            --primary-text: #ffffff;
+            --primary-light: #fef9c3;
+            --accent-cyan: #0284c7;
+            --accent-purple: #7c3aed;
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            --navbar-bg: rgba(255, 255, 255, 0.92);
+            --input-bg: #ffffff;
+            --input-border: #cbd5e1;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Top Navbar */
+        .navbar-custom {
+            background: var(--navbar-bg);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+            transition: all 0.3s ease;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 1.35rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--primary-color), #ff9f1c);
+            color: #0b0e14;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 14px rgba(255, 230, 0, 0.4);
+            font-weight: 900;
+        }
+
+        /* Detail Card */
+        .detail-card {
+            background-color: var(--bg-card);
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            backdrop-filter: blur(8px);
+        }
+
+        /* Media Gallery */
+        .main-media-container {
+            position: relative;
+            width: 100%;
+            height: 420px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .main-media-container img, 
+        .main-media-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+
+        .main-media-placeholder {
+            font-size: 7rem;
+            filter: drop-shadow(0 10px 25px rgba(255, 230, 0, 0.25));
+        }
+
+        .thumb-gallery {
+            display: flex;
+            gap: 12px;
+            margin-top: 14px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+        }
+
+        .thumb-item {
+            width: 80px;
+            height: 80px;
+            border-radius: 14px;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: #111827;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .thumb-item.active {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(255, 230, 0, 0.3);
+            transform: scale(1.05);
+        }
+
+        .thumb-item img, 
+        .thumb-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .thumb-video-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--primary-color);
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+        }
+
+        .btn-delete-thumb {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            z-index: 5;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-delete-thumb:hover {
+            transform: scale(1.15);
+            background: #ef4444;
+        }
+
+        /* Product Info Elements */
+        .category-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: var(--primary-light);
+            color: var(--primary-color);
+            border: 1px solid var(--border-glow);
+        }
+
+        .product-price-large {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .star-rating {
+            color: #ffe600;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .quantity-stepper {
+            display: inline-flex;
+            align-items: center;
+            background: var(--input-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 4px;
+        }
+
+        .stepper-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: none;
+            background: var(--bg-card-solid);
+            color: var(--text-main);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            transition: all 0.15s ease;
+        }
+
+        .stepper-btn:hover:not(:disabled) {
+            background: var(--primary-color);
+            color: var(--primary-text);
+        }
+
+        .stepper-input {
+            width: 45px;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--text-main);
+        }
+
+        .stepper-input:focus {
+            outline: none;
+        }
+
+        /* Action Buttons */
+        .btn-add-cart-lg {
+            background: var(--primary-color);
+            color: var(--primary-text);
+            border: none;
+            font-weight: 800;
+            border-radius: 14px;
+            padding: 14px 24px;
+            box-shadow: 0 4px 16px rgba(255, 230, 0, 0.35);
+            transition: all 0.25s ease;
+        }
+
+        .btn-add-cart-lg:hover:not(:disabled) {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 230, 0, 0.45);
+            color: var(--primary-text);
+        }
+
+        .btn-chat-seller {
+            background: #1f2937;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            font-weight: 700;
+            border-radius: 14px;
+            padding: 14px 20px;
+            transition: all 0.25s ease;
+        }
+
+        .btn-chat-seller:hover {
+            background: #374151;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Reviews Section */
+        .review-card {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 14px;
+        }
+
+        .avatar-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffe600, #ff9f1c);
+            color: #0b0e14;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .star-picker {
+            display: inline-flex;
+            flex-direction: row-reverse;
+            gap: 4px;
+        }
+
+        .star-picker input {
+            display: none;
+        }
+
+        .star-picker label {
+            font-size: 1.8rem;
+            color: #4b5563;
+            cursor: pointer;
+            transition: color 0.15s ease;
+        }
+
+        .star-picker label:hover,
+        .star-picker label:hover ~ label,
+        .star-picker input:checked ~ label {
+            color: #ffe600;
+        }
+
+        /* Floating Chat Widget */
+        .chat-widget-fab {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: var(--primary-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            box-shadow: 0 8px 25px rgba(255, 230, 0, 0.4);
+            cursor: pointer;
+            z-index: 1040;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 2px solid var(--primary-hover);
+        }
+
+        .chat-widget-fab:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .chat-box {
+            position: fixed;
+            bottom: 95px;
+            right: 25px;
+            width: 380px;
+            max-width: calc(100vw - 40px);
+            height: 520px;
+            background: var(--bg-card-solid);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            z-index: 1040;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #111827, #0b0e14);
+            color: white;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: var(--bg-body);
+        }
+
+        .chat-bubble {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 16px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            position: relative;
+            word-break: break-word;
+        }
+
+        .bubble-me {
+            align-self: flex-end;
+            background: var(--primary-color);
+            color: var(--primary-text);
+            border-bottom-right-radius: 4px;
+            font-weight: 500;
+        }
+
+        .bubble-other {
+            align-self: flex-start;
+            background: var(--input-bg);
+            color: var(--text-main);
+            border-bottom-left-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        .bubble-time {
+            font-size: 0.7rem;
+            opacity: 0.75;
+            margin-top: 4px;
+            display: block;
+            text-align: right;
+        }
+
+        .chat-input-container {
+            padding: 12px;
+            background: var(--bg-card-solid);
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Cart Offcanvas styling */
+        .cart-item-card {
+            background: var(--input-bg);
+            border-radius: 14px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Theme toggle button */
+        .theme-toggle-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card-solid);
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .theme-toggle-btn:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(255, 230, 0, 0.3);
+        }
+
+        /* Modals & Forms */
+        .modal-content {
+            background-color: var(--bg-card-solid);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+        }
+
+        .modal-header, .modal-footer {
+            border-color: var(--border-color);
+        }
+
+        .form-control, .form-select {
+            background-color: var(--input-bg);
+            border: 1.5px solid var(--input-border);
+            color: var(--text-main);
+        }
+
+        .form-control:focus, .form-select:focus {
+            background-color: var(--input-bg);
+            border-color: var(--primary-color);
+            color: var(--text-main);
+            box-shadow: 0 0 0 3px rgba(255, 230, 0, 0.25);
+        }
+
+        .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        [data-theme="light"] .btn-close {
+            filter: none;
+        }
+
+        @keyframes detail-reveal {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #productDetailContainer > .row,
+        #reviewsSection {
+            animation: detail-reveal 0.5s ease both;
+        }
+
+        .review-card {
+            animation: detail-reveal 0.4s ease both;
+        }
+
+        .thumb-item:hover {
+            transform: translateY(-3px) scale(1.03);
+            border-color: var(--primary-color);
+        }
+
+        .modal.fade .modal-dialog { transform: translateY(16px) scale(0.98); }
+        .modal.show .modal-dialog { transform: translateY(0) scale(1); transition: transform 0.28s ease; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100;">
+        <div id="appToast" class="toast align-items-center border-0 shadow-lg text-white" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body fw-semibold" id="toastMessage">Thông báo</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom py-3">
+        <div class="container">
+            <a class="brand-logo" href="/">
+                <div class="brand-icon">
+                    <i class="bi bi-cup-straw"></i>
+                </div>
+                <div>
+                    <div>BOBA &amp; BITES</div>
+                    <small class="d-block text-muted" style="font-size: 0.65rem; font-family: 'Plus Jakarta Sans'; font-weight: 600; letter-spacing: 1px;">ENDFIELD EDITION</small>
+                </div>
+            </a>
+
+            <div class="d-flex align-items-center gap-2">
+                <!-- Theme Toggle -->
+                <button class="theme-toggle-btn me-1" onclick="toggleTheme()" title="Chuyển chế độ Sáng / Tối">
+                    <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+                </button>
+
+                <a href="/" class="btn btn-outline-secondary rounded-pill px-3 py-2 btn-sm fw-semibold me-2 d-none d-md-inline-flex align-items-center gap-1">
+                    <i class="bi bi-arrow-left"></i> Quay lại thực đơn
+                </a>
+
+                <!-- Cart Button -->
+                <button class="btn btn-outline-warning position-relative rounded-pill px-3 py-2 border fw-semibold d-flex align-items-center gap-2" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
+                    <i class="bi bi-cart3 fs-5"></i>
+                    <span class="d-none d-sm-inline">Giỏ hàng</span>
+                    <span id="navCartCount" class="badge rounded-pill bg-danger">0</span>
+                </button>
+
+                <!-- Auth Section in Navbar -->
+                <div id="navAuthSection" class="d-flex align-items-center gap-2">
+                    <button class="btn btn-outline-warning rounded-pill px-3 py-2 fw-semibold btn-sm" onclick="openLoginModal()">
+                        <i class="bi bi-person me-1"></i> Đăng Nhập
+                    </button>
+                    <button class="btn btn-warning rounded-pill px-3 py-2 fw-bold btn-sm text-dark d-none d-sm-inline-block" onclick="openRegisterModal()">
+                        Đăng Ký
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container py-4 my-2 flex-grow-1">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted"><i class="bi bi-house-door me-1"></i>Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted" id="breadcrumbCategory">Thực đơn</a></li>
+                <li class="breadcrumb-item active fw-semibold text-warning" id="breadcrumbProductName" aria-current="page">Chi tiết sản phẩm</li>
+            </ol>
+        </nav>
+
+        <!-- Loading State -->
+        <div id="productLoading" class="text-center py-5">
+            <div class="spinner-border text-warning" role="status" style="width: 3rem; height: 3rem;">
+                <span class="visually-hidden">Đang tải...</span>
+            </div>
+            <p class="mt-3 text-muted fw-semibold">Đang tải thông tin món ăn...</p>
+        </div>
+
+        <!-- Product Not Found State -->
+        <div id="productNotFound" class="text-center py-5 d-none">
+            <div class="display-1 text-muted"><i class="bi bi-emoji-frown"></i></div>
+            <h3 class="fw-bold mt-3">Không tìm thấy món ăn này!</h3>
+            <p class="text-muted">Món ăn có thể đã ngừng kinh doanh hoặc đường dẫn không chính xác.</p>
+            <a href="/" class="btn btn-warning rounded-pill px-4 py-2 mt-2 fw-bold text-dark">
+                <i class="bi bi-arrow-left me-1"></i> Quay về Thực đơn
+            </a>
+        </div>
+
+        <!-- Product Detail Content -->
+        <div id="productDetailContainer" class="d-none">
+            <div class="row g-4">
+                <!-- Left: Media Gallery -->
+                <div class="col-lg-6">
+                    <div class="detail-card p-3 p-md-4">
+                        <div class="main-media-container" id="mainMediaWrapper">
+                            <div id="mainMediaPlaceholder" class="main-media-placeholder">&#x1F9CB;</div>
+                        </div>
+                        
+                        <!-- Thumbnail list -->
+                        <div class="thumb-gallery" id="thumbGallery">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Product Info & Actions -->
+                <div class="col-lg-6">
+                    <div class="detail-card p-4 p-md-5 h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <span class="category-tag" id="productCategoryBadge">
+                                    <i class="bi bi-tag-fill"></i> <span id="productCategoryName">Trà Sữa</span>
+                                </span>
+                                <span id="productStockBadge" class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-3 py-2 fw-bold">
+                                    Còn hàng
+                                </span>
+                            </div>
+
+                            <h1 class="fw-bold mb-3 fs-2" id="productTitle">Tên sản phẩm</h1>
+
+                            <!-- Rating & Reviews snippet -->
+                            <div class="d-flex align-items-center gap-2 mb-3 pb-3 border-bottom border-secondary border-opacity-25">
+                                <div class="star-rating" id="productStarRating">
+                                    <!-- Stars injected here -->
+                                </div>
+                                <span class="fw-bold fs-6 text-warning" id="productAvgRating">0.0</span>
+                                <span class="text-muted small" id="productReviewCount">(0 đánh giá)</span>
+                                <span class="text-muted mx-2">&bull;</span>
+                                <a href="#reviewsSection" class="text-warning text-decoration-none small fw-semibold">Xem đánh giá</a>
+                            </div>
+
+                            <!-- Price -->
+                            <div class="mb-4">
+                                <span class="text-muted small d-block">Giá niêm yết:</span>
+                                <span class="product-price-large" id="productPrice">0 ₫</span>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="mb-4">
+                                <h6 class="fw-bold text-light mb-2"><i class="bi bi-info-circle me-1 text-warning"></i> Mô tả món:</h6>
+                                <p class="text-muted mb-0" id="productDescription" style="line-height: 1.6;">
+                                    Chưa có mô tả cho món ăn này.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <!-- Quantity & Action -->
+                            <div class="row g-3 align-items-center mb-4">
+                                <div class="col-auto">
+                                    <label class="form-label small fw-bold text-muted mb-1 d-block">Số lượng</label>
+                                    <div class="quantity-stepper">
+                                        <button class="stepper-btn" onclick="adjustDetailQty(-1)"><i class="bi bi-dash"></i></button>
+                                        <input type="number" id="detailQtyInput" class="stepper-input" value="1" min="1" readonly>
+                                        <button class="stepper-btn" onclick="adjustDetailQty(1)"><i class="bi bi-plus"></i></button>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <label class="form-label small fw-bold text-muted mb-1 d-block">&nbsp;</label>
+                                    <button class="btn btn-add-cart-lg w-100 d-flex align-items-center justify-content-center gap-2" id="btnAddToCartDetail" onclick="addToCartFromDetail()">
+                                        <i class="bi bi-cart-plus-fill fs-5"></i>
+                                        <span>Thêm Vào Giỏ Hàng</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Extra Action: Chat with seller -->
+                            <button class="btn btn-chat-seller w-100 d-flex align-items-center justify-content-center gap-2" onclick="openChatWidget()">
+                                <i class="bi bi-chat-dots-fill text-warning"></i>
+                                <span>Chat &amp; Tư Vấn Với Người Bán Về Món Này</span>
+                            </button>
+
+                            <!-- Trust Badges -->
+                            <div class="row text-center mt-4 pt-3 border-top border-secondary border-opacity-25 g-2">
+                                <div class="col-4">
+                                    <i class="bi bi-lightning-charge text-warning fs-5 d-block mb-1"></i>
+                                    <span class="text-muted" style="font-size: 0.75rem;">Giao siêu tốc 30p</span>
+                                </div>
+                                <div class="col-4">
+                                    <i class="bi bi-shield-check text-success fs-5 d-block mb-1"></i>
+                                    <span class="text-muted" style="font-size: 0.75rem;">Đảm bảo tươi mới</span>
+                                </div>
+                                <div class="col-4">
+                                    <i class="bi bi-star text-warning fs-5 d-block mb-1"></i>
+                                    <span class="text-muted" style="font-size: 0.75rem;">100% ngon miệng</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Reviews Section -->
+            <section id="reviewsSection" class="mt-5">
+                <div class="detail-card p-4 p-md-5">
+                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4 pb-3 border-bottom border-secondary border-opacity-25">
+                        <div>
+                            <h3 class="fw-bold mb-1"><i class="bi bi-chat-square-quote text-warning me-2"></i>Đánh Giá &amp; Nhận Xét</h3>
+                            <p class="text-muted mb-0">Cảm nhận thực tế từ những thực khách đã thưởng thức món này</p>
+                        </div>
+                        <div class="d-flex align-items-center gap-3 bg-dark bg-opacity-50 px-4 py-2 rounded-pill border border-secondary border-opacity-25">
+                            <div class="fs-2 fw-bold text-warning" id="reviewAvgScore">0.0</div>
+                            <div>
+                                <div class="star-rating fs-6" id="reviewStarHeader"></div>
+                                <small class="text-muted d-block" id="reviewTotalHeader">0 nhận xét</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Review Form Box -->
+                    <div class="card bg-dark bg-opacity-40 border border-secondary border-opacity-25 rounded-4 p-3 p-md-4 mb-4">
+                        <div id="reviewAuthBox">
+                            <!-- Form if Logged In -->
+                            <form id="submitReviewForm" onsubmit="handleReviewSubmit(event)" class="d-none">
+                                <h5 class="fw-bold mb-3 text-warning">Gửi Đánh Giá Của Bạn</h5>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold small text-muted d-block">Bạn chấm món này mấy sao?</label>
+                                    <div class="star-picker">
+                                        <input type="radio" id="star5" name="rating" value="5" required checked>
+                                        <label for="star5" title="5 sao - Rất ngon!"><i class="bi bi-star-fill"></i></label>
+                                        <input type="radio" id="star4" name="rating" value="4">
+                                        <label for="star4" title="4 sao - Ngon"><i class="bi bi-star-fill"></i></label>
+                                        <input type="radio" id="star3" name="rating" value="3">
+                                        <label for="star3" title="3 sao - Bình thường"><i class="bi bi-star-fill"></i></label>
+                                        <input type="radio" id="star2" name="rating" value="2">
+                                        <label for="star2" title="2 sao - Chưa ưng lắm"><i class="bi bi-star-fill"></i></label>
+                                        <input type="radio" id="star1" name="rating" value="1">
+                                        <label for="star1" title="1 sao - Tệ"><i class="bi bi-star-fill"></i></label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="reviewComment" class="form-label fw-semibold small text-muted">Nhận xét chi tiết</label>
+                                    <textarea id="reviewComment" class="form-control rounded-3" rows="3" placeholder="Hương vị thế nào, độ ngọt ra sao? Hãy chia sẻ với mọi người nhé..." required></textarea>
+                                </div>
+
+                                <button type="submit" id="btnSubmitReview" class="btn btn-warning rounded-pill px-4 py-2 fw-bold text-dark">
+                                    <i class="bi bi-send-fill me-1"></i> Gửi Đánh Giá
+                                </button>
+                            </form>
+
+                            <!-- Notice if NOT Logged In -->
+                            <div id="reviewLoginPrompt" class="text-center py-3">
+                                <i class="bi bi-lock-fill text-muted fs-3 mb-2 d-block"></i>
+                                <h6 class="fw-bold">Bạn cần đăng nhập để gửi đánh giá</h6>
+                                <p class="text-muted small mb-3">Hãy đăng nhập để chia sẻ trải nghiệm thưởng thức món ăn cùng cộng đồng nhé!</p>
+                                <button class="btn btn-warning btn-sm rounded-pill px-4 py-2 fw-bold text-dark" onclick="openLoginModal()">
+                                    <i class="bi bi-person me-1"></i> Đăng Nhập Ngay
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reviews List -->
+                    <div id="reviewsList">
+                        <!-- Injected by JS -->
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Floating Chat Widget -->
+    <div class="chat-widget-fab" id="chatFab" onclick="toggleChatWidget()" title="Chat với Shop">
+        <i class="bi bi-chat-dots-fill"></i>
+    </div>
+
+    <div class="chat-box d-none" id="chatBox">
+        <div class="chat-header">
+            <div class="d-flex align-items-center gap-2">
+                <div class="brand-icon" style="width: 34px; height: 34px; font-size: 1rem;">
+                    <i class="bi bi-shop"></i>
+                </div>
+                <div>
+                    <h6 class="mb-0 fw-bold fs-6">Boba &amp; Bites Store</h6>
+                    <small class="d-flex align-items-center gap-1" style="font-size: 0.7rem; color: #6ee7b7 !important;">
+                        <span class="spinner-grow spinner-grow-sm text-success" style="width: 6px; height: 6px;"></span> Đang trực tuyến
+                    </small>
+                </div>
+            </div>
+            <button class="btn btn-sm btn-link text-white text-decoration-none p-0" onclick="toggleChatWidget()">
+                <i class="bi bi-dash-lg fs-5"></i>
+            </button>
+        </div>
+
+        <div class="chat-messages" id="chatMessagesContainer">
+            <!-- Messages injected by JS -->
+        </div>
+
+        <!-- Quick inquire banner -->
+        <div id="chatProductPrompt" class="bg-dark bg-opacity-50 p-2 border-top border-bottom border-secondary border-opacity-25 small d-flex align-items-center justify-content-between">
+            <div class="text-truncate me-2">
+                <i class="bi bi-tag text-warning me-1"></i>
+                <span class="fw-semibold" id="chatPromptProductName">Đang xem sản phẩm</span>
+            </div>
+            <button class="btn btn-xs btn-outline-warning rounded-pill py-0 px-2" style="font-size: 0.75rem;" onclick="prefillProductInquiry()">
+                Hỏi món này
+            </button>
+        </div>
+
+        <!-- Input Box -->
+        <div class="chat-input-container">
+            <div id="chatAuthWarning" class="text-center py-2 d-none">
+                <small class="text-muted d-block mb-1">Vui lòng đăng nhập để nhắn tin với Shop</small>
+                <button class="btn btn-sm btn-warning rounded-pill px-3 py-1 fw-bold text-dark" onclick="openLoginModal()">Đăng nhập</button>
+            </div>
+            
+            <form id="chatForm" onsubmit="handleSendChat(event)" class="d-flex gap-2">
+                <input type="text" id="chatInput" class="form-control rounded-pill px-3" placeholder="Nhập tin nhắn..." autocomplete="off">
+                <button type="submit" class="btn btn-warning rounded-circle d-flex align-items-center justify-content-center text-dark" style="width: 40px; height: 40px; flex-shrink: 0;">
+                    <i class="bi bi-send-fill"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cart Offcanvas -->
+    <div class="offcanvas offcanvas-end offcanvas-custom" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel" style="width: 400px; max-width: 90vw;">
+        <div class="offcanvas-header border-bottom border-secondary border-opacity-25">
+            <h5 class="offcanvas-title fw-bold" id="cartOffcanvasLabel">
+                <i class="bi bi-cart3 text-warning me-2"></i>Giỏ Hàng Của Bạn
+            </h5>
+            <button type="button" class="btn-close shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column">
+            <div id="cartOffcanvasEmpty" class="text-center my-auto py-5">
+                <i class="bi bi-cart-x text-muted" style="font-size: 3.5rem;"></i>
+                <h6 class="fw-bold mt-3">Giỏ hàng đang trống!</h6>
+                <p class="text-muted small">Hãy chọn món ngon để thêm vào giỏ nhé.</p>
+            </div>
+
+            <div id="cartOffcanvasList" class="flex-grow-1 overflow-auto d-none">
+                <!-- Cart items injected here -->
+            </div>
+
+            <div id="cartOffcanvasFooter" class="border-top border-secondary border-opacity-25 pt-3 mt-auto d-none">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="fw-semibold text-muted">Tổng thanh toán:</span>
+                    <span class="fs-4 fw-bold text-warning" id="cartOffcanvasTotal">0 ₫</span>
+                </div>
+                <button class="btn btn-warning w-100 py-3 fw-bold rounded-pill text-dark shadow" onclick="handleCheckoutModalOpen()">
+                    <i class="bi bi-credit-card me-1"></i> Tiến Hành Đặt Hàng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Checkout -->
+    <div class="modal fade" id="checkoutModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-bag-check-fill text-warning me-2"></i>Xác Nhận Đặt Hàng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div id="checkoutSummaryList" class="mb-3">
+                        <!-- Order items summary -->
+                    </div>
+                    <div class="bg-dark bg-opacity-50 p-3 rounded-3 mb-3 d-flex justify-content-between align-items-center border border-secondary border-opacity-25">
+                        <span class="fw-bold">Tổng cộng:</span>
+                        <span class="fs-5 fw-bold text-warning" id="checkoutModalTotal">0 ₫</span>
+                    </div>
+                    <div class="alert alert-warning py-2 small mb-0 bg-opacity-10 border-warning text-warning">
+                        <i class="bi bi-info-circle-fill me-1"></i> Đơn hàng sẽ được gửi và chuẩn bị ngay khi bạn xác nhận.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" id="btnConfirmOrder" class="btn btn-warning rounded-pill px-4 fw-bold text-dark" onclick="submitOrder()">
+                        Xác Nhận Đặt Hàng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modals: Login / Register / OTP -->
+    <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="authModalTitle">Đăng Nhập</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <!-- Login Form -->
+                    <form id="loginForm" onsubmit="handleLogin(event)">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Tên đăng nhập</label>
+                            <input type="text" id="loginUsername" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Mật khẩu</label>
+                            <input type="password" id="loginPassword" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-warning w-100 rounded-pill py-2 fw-bold text-dark" id="btnLoginSubmit">
+                            Đăng Nhập
+                        </button>
+                        <div class="text-center mt-3">
+                            <small class="text-muted">Chưa có tài khoản? <a href="#" class="text-warning fw-bold text-decoration-none" onclick="switchAuthMode('register')">Đăng ký ngay</a></small>
+                        </div>
+                    </form>
+
+                    <!-- Register Form -->
+                    <form id="registerForm" onsubmit="handleRegister(event)" class="d-none">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Tên đăng nhập</label>
+                            <input type="text" id="regUsername" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Email</label>
+                            <input type="email" id="regEmail" class="form-control" placeholder="name@example.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Mật khẩu</label>
+                            <input type="password" id="regPassword" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-warning w-100 rounded-pill py-2 fw-bold text-dark" id="btnRegSubmit">
+                            Đăng Ký Tài Khoản
+                        </button>
+                        <div class="text-center mt-3">
+                            <small class="text-muted">Đã có tài khoản? <a href="#" class="text-warning fw-bold text-decoration-none" onclick="switchAuthMode('login')">Đăng nhập</a></small>
+                        </div>
+                    </form>
+
+                    <!-- OTP Form -->
+                    <form id="otpForm" onsubmit="handleVerifyOTP(event)" class="d-none">
+                        <div class="text-center mb-3">
+                            <i class="bi bi-envelope-check text-warning fs-1"></i>
+                            <h6 class="fw-bold mt-2">Xác Thực Mã OTP</h6>
+                            <p class="text-muted small">Mã 6 chữ số đã được gửi đến email: <strong id="otpTargetEmail"></strong></p>
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" id="otpInput" class="form-control text-center fs-4 fw-bold" maxlength="6" placeholder="------" required>
+                        </div>
+                        <button type="submit" class="btn btn-warning w-100 rounded-pill py-2 fw-bold text-dark" id="btnOtpSubmit">
+                            Xác Minh Ngay
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // State Management
+        let currentProduct = null;
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let authUser = localStorage.getItem('auth_user') || null;
+        let isStaff = localStorage.getItem('is_staff') === 'true';
+        let accessToken = localStorage.getItem('access_token') || null;
+        let chatPollingInterval = null;
+        let pendingOtpEmail = '';
+
+        const productId = new URLSearchParams(window.location.search).get('id');
+
+        // Initial setup
+        document.addEventListener('DOMContentLoaded', () => {
+            updateThemeIcon();
+            updateNavAuthUI();
+            updateCartCount();
+            
+            if (!productId) {
+                document.getElementById('productLoading').classList.add('d-none');
+                document.getElementById('productNotFound').classList.remove('d-none');
+                return;
+            }
+
+            fetchProductDetail(productId);
+            checkChatAuth();
+        });
+
+        // ==========================================
+        // 1. THEME SWITCHER
+        // ==========================================
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme') || 'dark';
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            updateThemeIcon();
+        }
+
+        function updateThemeIcon() {
+            const current = document.documentElement.getAttribute('data-theme') || 'dark';
+            const icon = document.getElementById('themeIcon');
+            if (icon) {
+                icon.className = current === 'dark' ? 'bi bi-moon-stars-fill' : 'bi bi-sun-fill';
+            }
+        }
+
+        // ==========================================
+        // 2. FETCH & RENDER PRODUCT DETAIL
+        // ==========================================
+        async function fetchProductDetail(id) {
+            const loadingEl = document.getElementById('productLoading');
+            const notFoundEl = document.getElementById('productNotFound');
+            const containerEl = document.getElementById('productDetailContainer');
+
+            try {
+                const res = await fetch(`/api/products/${id}/`);
+                if (!res.ok) throw new Error('Không thể tải thông tin sản phẩm');
+
+                currentProduct = await res.json();
+                renderProductDetail(currentProduct);
+                loadingEl.classList.add('d-none');
+                containerEl.classList.remove('d-none');
+            } catch (err) {
+                console.error(err);
+                loadingEl.classList.add('d-none');
+                notFoundEl.classList.remove('d-none');
+            }
+        }
+
+        function renderProductDetail(p) {
+            document.title = `${p.name} - Boba & Bites`;
+            document.getElementById('breadcrumbProductName').textContent = p.name;
+            if (p.category_name) {
+                document.getElementById('breadcrumbCategory').textContent = p.category_name;
+                document.getElementById('productCategoryName').textContent = p.category_name;
+            }
+
+            document.getElementById('productTitle').textContent = p.name;
+            document.getElementById('productPrice').textContent = formatVND(p.price);
+            document.getElementById('productDescription').textContent = p.description || 'Chưa có mô tả chi tiết.';
+            
+            // Stock badge
+            const isOutOfStock = p.stock <= 0;
+            const stockBadge = document.getElementById('productStockBadge');
+            const btnAddCart = document.getElementById('btnAddToCartDetail');
+            
+            if (isOutOfStock) {
+                stockBadge.className = 'badge rounded-pill bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 fw-bold';
+                stockBadge.textContent = 'Tạm hết hàng';
+                btnAddCart.disabled = true;
+                btnAddCart.innerHTML = `<i class="bi bi-x-circle me-1"></i> Tạm hết hàng`;
+            } else {
+                stockBadge.className = 'badge rounded-pill bg-success-subtle text-success border border-success-subtle px-3 py-2 fw-bold';
+                stockBadge.textContent = `Còn: ${p.stock} phần`;
+                btnAddCart.disabled = false;
+            }
+
+            // Real average rating & stars
+            renderRatingStars(p.average_rating || 0, p.reviews ? p.reviews.length : 0);
+
+            // Media & Gallery
+            setupMediaGallery(p);
+
+            // Reviews list
+            renderReviews(p.reviews || []);
+
+            // Quick Prompt for Chat
+            document.getElementById('chatPromptProductName').textContent = p.name;
+        }
+
+        // ==========================================
+        // 3. MEDIA GALLERY & ADMIN DELETE MEDIA
+        // ==========================================
+        function setupMediaGallery(p) {
+            const mediaList = [];
+            
+            // Add primary image if exists
+            if (p.image) {
+                mediaList.push({ id: null, file: p.image, is_video: false, is_main: true });
+            }
+
+            // Add additional media files
+            if (p.media_files && p.media_files.length > 0) {
+                p.media_files.forEach(m => mediaList.push(m));
+            }
+
+            const galleryContainer = document.getElementById('thumbGallery');
+            galleryContainer.innerHTML = '';
+
+            if (mediaList.length === 0) {
+                const emoji = getProductEmoji(p.name, p.category_name);
+                document.getElementById('mainMediaWrapper').innerHTML = `<div class="main-media-placeholder">${emoji}</div>`;
+                return;
+            }
+
+            renderActiveMedia(mediaList[0], p);
+
+            mediaList.forEach((media, idx) => {
+                const thumb = document.createElement('div');
+                thumb.className = `thumb-item ${idx === 0 ? 'active' : ''}`;
+                
+                let thumbInner = '';
+                if (media.is_video) {
+                    thumbInner += `
+                        <video src="${media.file}" preload="metadata"></video>
+                        <div class="thumb-video-icon"><i class="bi bi-play-fill"></i></div>
+                    `;
+                } else {
+                    thumbInner += `<img src="${media.file}" alt="${p.name}">`;
+                }
+
+                // If user is admin and media has id (extra media), show delete button
+                if (isStaff && media.id) {
+                    thumbInner += `
+                        <button class="btn-delete-thumb" onclick="event.stopPropagation(); handleDeleteMedia(${media.id})" title="Xóa media này">
+                            <i class="bi bi-x"></i>
+                        </button>
+                    `;
+                }
+
+                thumb.innerHTML = thumbInner;
+
+                thumb.addEventListener('click', () => {
+                    document.querySelectorAll('.thumb-item').forEach(el => el.classList.remove('active'));
+                    thumb.classList.add('active');
+                    renderActiveMedia(media, p);
+                });
+
+                galleryContainer.appendChild(thumb);
+            });
+        }
+
+        function renderActiveMedia(media, p) {
+            const wrapper = document.getElementById('mainMediaWrapper');
+            if (media.is_video) {
+                wrapper.innerHTML = `
+                    <video src="${media.file}" controls autoplay class="w-100 h-100" style="object-fit: cover;"></video>
+                `;
+            } else {
+                wrapper.innerHTML = `
+                    <img src="${media.file}" alt="${p.name}" class="w-100 h-100" style="object-fit: cover;">
+                `;
+            }
+        }
+
+        async function handleDeleteMedia(mediaId) {
+            if (!confirm('Bạn có chắc chắn muốn xóa ảnh/video phụ này?')) return;
+
+            try {
+                const res = await fetch(`/api/admin/media/${mediaId}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                if (res.ok || res.status === 204) {
+                    showToast('Đã xóa media phụ thành công!', 'info');
+                    await fetchProductDetail(productId);
+                } else {
+                    showToast('Không thể xóa media này!', 'danger');
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Lỗi khi xóa media!', 'danger');
+            }
+        }
+
+        // ==========================================
+        // 4. RATING STARS & REVIEWS (WITH ADMIN DELETE)
+        // ==========================================
+        function renderRatingStars(avg, count) {
+            const fullStars = Math.floor(avg);
+            const hasHalfStar = (avg - fullStars) >= 0.3 && (avg - fullStars) <= 0.7;
+            const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+            let starsHtml = '';
+            for (let i = 0; i < fullStars; i++) starsHtml += '<i class="bi bi-star-fill"></i>';
+            if (hasHalfStar) starsHtml += '<i class="bi bi-star-half"></i>';
+            for (let i = 0; i < emptyStars; i++) starsHtml += '<i class="bi bi-star text-secondary opacity-50"></i>';
+
+            document.getElementById('productStarRating').innerHTML = starsHtml;
+            document.getElementById('productAvgRating').textContent = avg > 0 ? avg.toFixed(1) : 'Chưa có';
+            document.getElementById('productReviewCount').textContent = `(${count} đánh giá)`;
+
+            document.getElementById('reviewAvgScore').textContent = avg > 0 ? avg.toFixed(1) : '0.0';
+            document.getElementById('reviewStarHeader').innerHTML = starsHtml;
+            document.getElementById('reviewTotalHeader').textContent = `${count} nhận xét`;
+        }
+
+        function renderReviews(reviews) {
+            const listEl = document.getElementById('reviewsList');
+            if (!reviews || reviews.length === 0) {
+                listEl.innerHTML = `
+                    <div class="text-center py-4 text-muted">
+                        <i class="bi bi-chat-heart fs-1 d-block mb-2 text-warning opacity-75"></i>
+                        <p class="mb-0 fw-medium">Chưa có đánh giá nào cho món này.</p>
+                        <small>Hãy là người đầu tiên trải nghiệm và chia sẻ cảm nhận nhé!</small>
+                    </div>
+                `;
+                return;
+            }
+
+            listEl.innerHTML = reviews.map((r, index) => {
+                let stars = '';
+                for (let i = 1; i <= 5; i++) {
+                    stars += i <= r.rating ? '<i class="bi bi-star-fill text-warning"></i>' : '<i class="bi bi-star text-secondary opacity-50"></i>';
+                }
+
+                const initial = (r.username || 'U').charAt(0).toUpperCase();
+                const dateStr = r.created_at ? new Date(r.created_at).toLocaleDateString('vi-VN', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+
+                return `
+                    <div class="review-card" style="animation-delay: ${Math.min(index * 0.06, 0.3)}s;">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="avatar-circle">${initial}</div>
+                                <div>
+                                    <h6 class="mb-0 fw-bold">${escapeHtml(r.username)}</h6>
+                                    <small class="text-muted" style="font-size: 0.75rem;">${dateStr}</small>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="d-flex gap-1">${stars}</div>
+                                ${isStaff ? `
+                                    <button class="btn btn-outline-danger btn-sm rounded-pill px-2 py-0" style="font-size: 0.75rem;" onclick="handleDeleteReview(${r.id})" title="Xóa đánh giá">
+                                        <i class="bi bi-trash3 me-1"></i> Xóa
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                        <p class="mb-0 text-light opacity-90" style="font-size: 0.95rem; line-height: 1.5;">${escapeHtml(r.comment)}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function handleDeleteReview(reviewId) {
+            if (!confirm('Bạn có chắc chắn muốn xóa đánh giá này?')) return;
+
+            try {
+                const res = await fetch(`/api/admin/reviews/${reviewId}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                if (res.ok || res.status === 204) {
+                    showToast('Đã xóa đánh giá thành công!', 'info');
+                    await fetchProductDetail(productId);
+                } else {
+                    showToast('Không thể xóa đánh giá này!', 'danger');
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Lỗi khi xóa đánh giá!', 'danger');
+            }
+        }
+
+        async function handleReviewSubmit(e) {
+            e.preventDefault();
+            if (!accessToken) {
+                openLoginModal();
+                return;
+            }
+
+            const rating = document.querySelector('input[name="rating"]:checked')?.value || 5;
+            const comment = document.getElementById('reviewComment').value.trim();
+
+            if (!comment) {
+                showToast('Vui lòng viết nhận xét cảm nhận của bạn!', 'warning');
+                return;
+            }
+
+            const btnSubmit = document.getElementById('btnSubmitReview');
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Đang gửi...`;
+
+            try {
+                const res = await fetch(`/api/products/${productId}/reviews/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`
+                    },
+                    body: JSON.stringify({ rating: parseInt(rating), comment })
+                });
+
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.detail || 'Không thể gửi đánh giá');
+                }
+
+                showToast('Cảm ơn bạn đã gửi đánh giá món ăn!', 'success');
+                document.getElementById('reviewComment').value = '';
+                await fetchProductDetail(productId);
+            } catch (err) {
+                console.error(err);
+                showToast(err.message || 'Lỗi khi gửi đánh giá', 'danger');
+            } finally {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = `<i class="bi bi-send-fill me-1"></i> Gửi Đánh Giá`;
+            }
+        }
+
+        // ==========================================
+        // 5. QUANTITY & CART
+        // ==========================================
+        function adjustDetailQty(delta) {
+            const input = document.getElementById('detailQtyInput');
+            let val = parseInt(input.value) || 1;
+            val += delta;
+            if (val < 1) val = 1;
+            if (currentProduct && val > currentProduct.stock) {
+                val = currentProduct.stock;
+                showToast(`Trong kho chỉ còn ${currentProduct.stock} phần!`, 'warning');
+            }
+            input.value = val;
+        }
+
+        function addToCartFromDetail() {
+            if (!currentProduct) return;
+            const qty = parseInt(document.getElementById('detailQtyInput').value) || 1;
+            
+            const existing = cart.find(i => i.product === currentProduct.id);
+            const currentInCart = existing ? existing.quantity : 0;
+
+            if (currentInCart + qty > currentProduct.stock) {
+                showToast(`Số lượng chọn vượt quá tồn kho (Hiện có: ${currentProduct.stock})!`, 'danger');
+                return;
+            }
+
+            if (existing) {
+                existing.quantity += qty;
+            } else {
+                cart.push({
+                    product: currentProduct.id,
+                    name: currentProduct.name,
+                    price: currentProduct.price,
+                    quantity: qty,
+                    stock: currentProduct.stock
+                });
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            showToast(`Đã thêm ${qty} phần "${currentProduct.name}" vào giỏ hàng!`, 'success');
+        }
+
+        function updateCartCount() {
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('navCartCount').textContent = count;
+        }
+
+        document.getElementById('cartOffcanvas').addEventListener('show.bs.offcanvas', () => {
+            renderCartOffcanvas();
+        });
+
+        function renderCartOffcanvas() {
+            const emptyEl = document.getElementById('cartOffcanvasEmpty');
+            const listEl = document.getElementById('cartOffcanvasList');
+            const footerEl = document.getElementById('cartOffcanvasFooter');
+            const totalEl = document.getElementById('cartOffcanvasTotal');
+
+            if (cart.length === 0) {
+                emptyEl.classList.remove('d-none');
+                listEl.classList.add('d-none');
+                footerEl.classList.add('d-none');
+                return;
+            }
+
+            emptyEl.classList.add('d-none');
+            listEl.classList.remove('d-none');
+            footerEl.classList.remove('d-none');
+
+            let total = 0;
+            listEl.innerHTML = cart.map(item => {
+                const subtotal = item.price * item.quantity;
+                total += subtotal;
+
+                return `
+                    <div class="cart-item-card">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="fw-bold mb-0 text-truncate me-2">${escapeHtml(item.name)}</h6>
+                            <button class="btn btn-sm text-danger p-0 border-0" onclick="removeCartItem(${item.product})">
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-warning fw-bold">${formatVND(item.price)}</span>
+                            <div class="quantity-stepper" style="transform: scale(0.85); transform-origin: right center;">
+                                <button class="stepper-btn" onclick="updateCartQty(${item.product}, -1)"><i class="bi bi-dash"></i></button>
+                                <span class="stepper-input">${item.quantity}</span>
+                                <button class="stepper-btn" onclick="updateCartQty(${item.product}, 1)"><i class="bi bi-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            totalEl.textContent = formatVND(total);
+        }
+
+        function updateCartQty(productId, change) {
+            const item = cart.find(i => i.product === productId);
+            if (!item) return;
+
+            if (change > 0 && item.quantity >= item.stock) {
+                showToast(`Đã đạt giới hạn tồn kho!`, 'warning');
+                return;
+            }
+
+            item.quantity += change;
+            if (item.quantity <= 0) {
+                cart = cart.filter(i => i.product !== productId);
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            renderCartOffcanvas();
+        }
+
+        function removeCartItem(productId) {
+            cart = cart.filter(i => i.product !== productId);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            renderCartOffcanvas();
+            showToast('Đã xóa món khỏi giỏ hàng', 'info');
+        }
+
+        function handleCheckoutModalOpen() {
+            bootstrap.Offcanvas.getInstance(document.getElementById('cartOffcanvas'))?.hide();
+
+            const summaryEl = document.getElementById('checkoutSummaryList');
+            let total = 0;
+            summaryEl.innerHTML = cart.map(i => {
+                const sub = i.price * i.quantity;
+                total += sub;
+                return `
+                    <div class="d-flex justify-content-between align-items-center py-2 border-bottom border-secondary border-opacity-25">
+                        <div>
+                            <span class="fw-semibold">${escapeHtml(i.name)}</span>
+                            <small class="text-muted d-block">x ${i.quantity}</small>
+                        </div>
+                        <span class="fw-bold text-warning">${formatVND(sub)}</span>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('checkoutModalTotal').textContent = formatVND(total);
+            new bootstrap.Modal(document.getElementById('checkoutModal')).show();
+        }
+
+        async function submitOrder() {
+            if (cart.length === 0) return;
+            const btn = document.getElementById('btnConfirmOrder');
+            btn.disabled = true;
+            btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Đang tạo đơn...`;
+
+            try {
+                const orderPayload = {
+                    items: cart.map(i => ({ product: i.product, quantity: i.quantity }))
+                };
+
+                const res = await fetch('/api/orders/', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`
+                    },
+                    body: JSON.stringify(orderPayload)
+                });
+
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.error || err.detail || 'Đặt hàng không thành công');
+                }
+
+                const data = await res.json();
+                cart = [];
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartCount();
+
+                bootstrap.Modal.getInstance(document.getElementById('checkoutModal'))?.hide();
+                showToast(`🎉 Đặt hàng thành công! Mã đơn: #${data.id}`, 'success');
+
+                fetchProductDetail(productId);
+            } catch (err) {
+                console.error(err);
+                showToast(err.message || 'Lỗi khi đặt hàng', 'danger');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Xác Nhận Đặt Hàng';
+            }
+        }
+
+        // ==========================================
+        // 6. CHAT WIDGET
+        // ==========================================
+        function toggleChatWidget() {
+            const chatBox = document.getElementById('chatBox');
+            chatBox.classList.toggle('d-none');
+            
+            if (!chatBox.classList.contains('d-none')) {
+                loadChatMessages();
+                if (!chatPollingInterval) {
+                    chatPollingInterval = setInterval(loadChatMessages, 4000);
+                }
+            } else {
+                if (chatPollingInterval) {
+                    clearInterval(chatPollingInterval);
+                    chatPollingInterval = null;
+                }
+            }
+        }
+
+        function openChatWidget() {
+            const chatBox = document.getElementById('chatBox');
+            if (chatBox.classList.contains('d-none')) {
+                toggleChatWidget();
+            }
+            prefillProductInquiry();
+        }
+
+        function prefillProductInquiry() {
+            if (currentProduct) {
+                const input = document.getElementById('chatInput');
+                input.value = `Shop ơi, cho mình hỏi về món "${currentProduct.name}" còn nhiều không ạ?`;
+                input.focus();
+            }
+        }
+
+        function checkChatAuth() {
+            const authWarn = document.getElementById('chatAuthWarning');
+            const chatForm = document.getElementById('chatForm');
+            const reviewForm = document.getElementById('submitReviewForm');
+            const reviewPrompt = document.getElementById('reviewLoginPrompt');
+
+            if (accessToken && authUser) {
+                authWarn.classList.add('d-none');
+                chatForm.classList.remove('d-none');
+                reviewForm.classList.remove('d-none');
+                reviewPrompt.classList.add('d-none');
+            } else {
+                authWarn.classList.remove('d-none');
+                chatForm.classList.add('d-none');
+                reviewForm.classList.add('d-none');
+                reviewPrompt.classList.remove('d-none');
+            }
+        }
+
+        async function loadChatMessages() {
+            if (!accessToken) return;
+            const container = document.getElementById('chatMessagesContainer');
+
+            try {
+                const res = await fetch('/api/chat/', {
+                    headers: { 'Authorization': `Bearer ${accessToken}` }
+                });
+                if (!res.ok) return;
+
+                const messages = await res.json();
+                if (messages.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center py-4 text-muted">
+                            <i class="bi bi-chat-dots fs-2 text-warning d-block mb-1"></i>
+                            <p class="small mb-0">Xin chào <strong>${escapeHtml(authUser)}</strong>!</p>
+                            <small>Hãy gửi tin nhắn để được hỗ trợ nhanh nhất nhé!</small>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = messages.map(m => {
+                    const isMe = m.sender_username === authUser;
+                    const time = m.created_at ? new Date(m.created_at).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) : '';
+                    return `
+                        <div class="chat-bubble ${isMe ? 'bubble-me' : 'bubble-other'}">
+                            ${!isMe ? `<small class="fw-bold d-block text-warning" style="font-size: 0.75rem;">${escapeHtml(m.sender_username || 'Admin')}</small>` : ''}
+                            ${escapeHtml(m.message)}
+                            <span class="bubble-time">${time}</span>
+                        </div>
+                    `;
+                }).join('');
+
+                container.scrollTop = container.scrollHeight;
+            } catch (err) {
+                console.error('Error fetching chat:', err);
+            }
+        }
+
+        async function handleSendChat(e) {
+            e.preventDefault();
+            if (!accessToken) {
+                openLoginModal();
+                return;
+            }
+
+            const input = document.getElementById('chatInput');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            input.value = '';
+
+            try {
+                const res = await fetch('/api/chat/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`
+                    },
+                    body: JSON.stringify({ message: msg })
+                });
+
+                if (!res.ok) throw new Error('Không gửi được tin nhắn');
+                loadChatMessages();
+            } catch (err) {
+                console.error(err);
+                showToast('Không gửi được tin nhắn!', 'danger');
+            }
+        }
+
+        // ==========================================
+        // 7. AUTH MODALS & STATE
+        // ==========================================
+        function updateNavAuthUI() {
+            const navAuth = document.getElementById('navAuthSection');
+            if (accessToken && authUser) {
+                navAuth.innerHTML = `
+                    <div class="dropdown">
+                        <button class="btn btn-outline-warning dropdown-toggle rounded-pill px-3 py-2 btn-sm fw-semibold" type="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle text-warning me-1"></i> ${escapeHtml(authUser)}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3">
+                            ${isStaff ? `<li><a class="dropdown-item fw-semibold text-warning" href="/admin-dashboard/"><i class="bi bi-speedometer2 me-2"></i>Trang Admin</a></li><li><hr class="dropdown-divider"></li>` : ''}
+                            <li><a class="dropdown-item text-danger fw-semibold" href="#" onclick="handleLogout()"><i class="bi bi-box-arrow-right me-2"></i>Đăng Xuất</a></li>
+                        </ul>
+                    </div>
+                `;
+            } else {
+                navAuth.innerHTML = `
+                    <button class="btn btn-outline-warning rounded-pill px-3 py-2 fw-semibold btn-sm" onclick="openLoginModal()">
+                        <i class="bi bi-person me-1"></i> Đăng Nhập
+                    </button>
+                    <button class="btn btn-warning rounded-pill px-3 py-2 fw-bold btn-sm text-dark d-none d-sm-inline-block" onclick="openRegisterModal()">
+                        Đăng Ký
+                    </button>
+                `;
+            }
+        }
+
+        function openLoginModal() {
+            switchAuthMode('login');
+            new bootstrap.Modal(document.getElementById('authModal')).show();
+        }
+
+        function openRegisterModal() {
+            switchAuthMode('register');
+            new bootstrap.Modal(document.getElementById('authModal')).show();
+        }
+
+        function switchAuthMode(mode) {
+            ['loginForm', 'registerForm', 'otpForm'].forEach(id => document.getElementById(id).classList.add('d-none'));
+            const titles = { login: 'Đăng Nhập', register: 'Đăng Ký Tài Khoản', otp: 'Xác Thực Email OTP' };
+            document.getElementById('authModalTitle').textContent = titles[mode];
+            document.getElementById(mode === 'otp' ? 'otpForm' : (mode === 'register' ? 'registerForm' : 'loginForm')).classList.remove('d-none');
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById('loginUsername').value.trim();
+            const p = document.getElementById('loginPassword').value;
+            const btn = document.getElementById('btnLoginSubmit');
+
+            btn.disabled = true;
+            btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Đang đăng nhập...`;
+
+            try {
+                const res = await fetch('/api/token/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: u, password: p })
+                });
+
+                if (!res.ok) throw new Error((await res.json()).detail || 'Sai tên đăng nhập hoặc mật khẩu!');
+
+                const data = await res.json();
+                localStorage.setItem('access_token', data.access);
+                localStorage.setItem('refresh_token', data.refresh);
+                localStorage.setItem('auth_user', data.username);
+                localStorage.setItem('is_staff', data.is_staff);
+
+                accessToken = data.access;
+                authUser = data.username;
+                isStaff = data.is_staff;
+
+                bootstrap.Modal.getInstance(document.getElementById('authModal'))?.hide();
+                showToast(`Chào mừng ${authUser}!`, 'success');
+
+                updateNavAuthUI();
+                checkChatAuth();
+                await fetchProductDetail(productId);
+            } catch (err) {
+                showToast(err.message, 'danger');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Đăng Nhập';
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const u = document.getElementById('regUsername').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const p = document.getElementById('regPassword').value;
+            const btn = document.getElementById('btnRegSubmit');
+
+            btn.disabled = true;
+            btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Đang xử lý...`;
+
+            try {
+                const res = await fetch('/api/register/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: u, email, password: p })
+                });
+
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.username ? err.username[0] : (err.email ? err.email[0] : 'Đăng ký thất bại!'));
+                }
+
+                pendingOtpEmail = email;
+                document.getElementById('otpTargetEmail').textContent = email;
+                showToast('Mã OTP đã được gửi đến email của bạn!', 'info');
+                switchAuthMode('otp');
+            } catch (err) {
+                showToast(err.message, 'danger');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Đăng Ký Tài Khoản';
+            }
+        }
+
+        async function handleVerifyOTP(e) {
+            e.preventDefault();
+            const otp = document.getElementById('otpInput').value.trim();
+            const btn = document.getElementById('btnOtpSubmit');
+
+            btn.disabled = true;
+            btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Đang xác thực...`;
+
+            try {
+                const res = await fetch('/api/verify-otp/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: pendingOtpEmail, otp })
+                });
+
+                if (!res.ok) throw new Error((await res.json()).error || 'Mã OTP không hợp lệ!');
+
+                showToast('Xác minh Email thành công! Bạn có thể đăng nhập ngay.', 'success');
+                switchAuthMode('login');
+            } catch (err) {
+                showToast(err.message, 'danger');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Xác Minh Ngay';
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+            localStorage.removeItem('auth_user');
+            localStorage.removeItem('is_staff');
+            accessToken = null;
+            authUser = null;
+            isStaff = false;
+
+            updateNavAuthUI();
+            checkChatAuth();
+            showToast('Đã đăng xuất tài khoản!', 'info');
+        }
+
+        // ==========================================
+        // 8. HELPERS
+        // ==========================================
+        function formatVND(amount) {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount || 0);
+        }
+
+        function getProductEmoji(name, categoryName) {
+            const str = ((name || '') + ' ' + (categoryName || '')).toLowerCase();
+            if (str.includes('trà sữa') || str.includes('boba')) return '&#x1F9CB;';
+            if (str.includes('trà') || str.includes('matcha')) return '&#x1F375;';
+            if (str.includes('gà') || str.includes('chicken')) return '&#x1F357;';
+            if (str.includes('khoai')) return '&#x1F35F;';
+            if (str.includes('bánh')) return '&#x1F370;';
+            if (str.includes('cá viên') || str.includes('xiên')) return '&#x1F361;';
+            if (str.includes('xúc xích')) return '&#x1F32D;';
+            return '&#x1F964;';
+        }
+
+        function showToast(message, type = 'success') {
+            const toastEl = document.getElementById('appToast');
+            const msgEl = document.getElementById('toastMessage');
+            
+            toastEl.className = `toast align-items-center border-0 shadow-lg text-white bg-${type}`;
+            msgEl.textContent = message;
+
+            new bootstrap.Toast(toastEl, { delay: 3500 }).show();
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.toString().replace(/[&<>"']/g, m => map[m]);
+        }
+    </script>
+</body>
+</html>
