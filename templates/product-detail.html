@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi Tiết Món Ăn - Boba &amp; Bites | Endfield Edition</title>
+    <title>Chi Tiết Món Ăn - Boba &amp; Bites Premium Store</title>
     
     <!-- Instant Theme Detection -->
     <script>
@@ -25,26 +25,26 @@
     
     <style>
         :root {
-            /* Endfield Sci-Fi Dark Theme (Default) */
-            --bg-body: #0b0e14;
-            --bg-card: rgba(22, 27, 34, 0.85);
-            --bg-card-solid: #161b22;
-            --bg-card-hover: #1c2128;
-            --border-color: #30363d;
-            --border-glow: rgba(255, 230, 0, 0.35);
-            --text-main: #f0f6fc;
-            --text-muted: #8b949e;
-            --text-light: #c9d1d9;
-            --primary-color: #ffe600; /* Neon Yellow */
-            --primary-hover: #ffd000;
-            --primary-text: #0b0e14;
-            --primary-light: rgba(255, 230, 0, 0.12);
-            --accent-cyan: #00f0ff;
+            /* Premium Modern Dark Theme (Default) */
+            --bg-body: #0d131f;
+            --bg-card: rgba(22, 30, 46, 0.85);
+            --bg-card-solid: #161e2e;
+            --bg-card-hover: #1f2b42;
+            --border-color: #27354f;
+            --border-glow: rgba(245, 158, 11, 0.35);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-light: #cbd5e1;
+            --primary-color: #f59e0b; /* Warm Boba Amber Gold */
+            --primary-hover: #d97706;
+            --primary-text: #0f172a;
+            --primary-light: rgba(245, 158, 11, 0.15);
+            --accent-cyan: #38bdf8;
             --accent-purple: #a855f7;
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            --navbar-bg: rgba(11, 14, 20, 0.88);
-            --input-bg: #0d1117;
-            --input-border: #30363d;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+            --navbar-bg: rgba(13, 19, 31, 0.92);
+            --input-bg: #111827;
+            --input-border: #334155;
             --radius-default: 18px;
         }
 
@@ -170,18 +170,39 @@
             cursor: pointer;
             overflow: hidden;
             flex-shrink: 0;
-            background: #111827;
+            background: var(--input-bg);
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .thumb-item:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
         }
 
         .thumb-item.active {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(255, 230, 0, 0.3);
-            transform: scale(1.05);
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.35);
+            transform: scale(1.06);
+        }
+
+        @keyframes mediaFadeIn {
+            0% {
+                opacity: 0.3;
+                transform: scale(0.97);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .main-media-fade {
+            animation: mediaFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         .thumb-item img, 
@@ -394,21 +415,32 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
             color: var(--primary-text);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.6rem;
-            box-shadow: 0 8px 25px rgba(255, 230, 0, 0.4);
+            box-shadow: 0 8px 24px rgba(245, 158, 11, 0.4);
             cursor: pointer;
-            z-index: 1040;
+            z-index: 1050;
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            border: 2px solid var(--primary-hover);
         }
 
         .chat-widget-fab:hover {
-            transform: scale(1.1) rotate(5deg);
+            transform: scale(1.12) rotate(6deg);
+            box-shadow: 0 12px 28px rgba(245, 158, 11, 0.5);
+        }
+
+        @keyframes chatSlideUpScale {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.92);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .chat-box {
@@ -426,7 +458,7 @@
             flex-direction: column;
             z-index: 1040;
             overflow: hidden;
-            transition: all 0.3s ease;
+            animation: chatSlideUpScale 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         .chat-header {
@@ -598,7 +630,7 @@
                 </div>
                 <div>
                     <div>BOBA &amp; BITES</div>
-                    <small class="d-block text-muted" style="font-size: 0.65rem; font-family: 'Plus Jakarta Sans'; font-weight: 600; letter-spacing: 1px;">ENDFIELD EDITION</small>
+                    <small class="d-block text-muted" style="font-size: 0.65rem; font-family: 'Plus Jakarta Sans'; font-weight: 600; letter-spacing: 1.5px;">BOBA &amp; SNACKS</small>
                 </div>
             </a>
 

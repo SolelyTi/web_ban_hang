@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boba &amp; Bites - Cửa Hàng Trà Sữa &amp; Đồ Ăn Vặt | Endfield Edition</title>
+    <title>Boba &amp; Bites - Cửa Hàng Trà Sữa &amp; Đồ Ăn Vặt Cao Cấp</title>
     
     <!-- Instant Theme Detection -->
     <script>
@@ -25,27 +25,27 @@
     
     <style>
         :root {
-            /* Endfield Sci-Fi Dark Theme (Default) */
-            --bg-body: #0b0e14;
-            --bg-card: rgba(22, 27, 34, 0.85);
-            --bg-card-solid: #161b22;
-            --bg-card-hover: #1c2128;
-            --border-color: #30363d;
-            --border-glow: rgba(255, 230, 0, 0.35);
-            --text-main: #f0f6fc;
-            --text-muted: #8b949e;
-            --text-light: #c9d1d9;
-            --primary-color: #ffe600; /* Neon Yellow */
-            --primary-hover: #ffd000;
-            --primary-text: #0b0e14;
-            --primary-light: rgba(255, 230, 0, 0.12);
-            --accent-cyan: #00f0ff;
+            /* Premium Modern Dark Theme (Default) */
+            --bg-body: #0d131f;
+            --bg-card: rgba(22, 30, 46, 0.85);
+            --bg-card-solid: #161e2e;
+            --bg-card-hover: #1f2b42;
+            --border-color: #27354f;
+            --border-glow: rgba(245, 158, 11, 0.35);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-light: #cbd5e1;
+            --primary-color: #f59e0b; /* Warm Boba Amber Gold */
+            --primary-hover: #d97706;
+            --primary-text: #0f172a;
+            --primary-light: rgba(245, 158, 11, 0.15);
+            --accent-cyan: #38bdf8;
             --accent-purple: #a855f7;
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            --card-hover-shadow: 0 15px 35px rgba(255, 230, 0, 0.15), 0 0 1px 1px rgba(255, 230, 0, 0.4);
-            --navbar-bg: rgba(11, 14, 20, 0.88);
-            --input-bg: #0d1117;
-            --input-border: #30363d;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+            --card-hover-shadow: 0 18px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(245, 158, 11, 0.25);
+            --navbar-bg: rgba(13, 19, 31, 0.92);
+            --input-bg: #111827;
+            --input-border: #334155;
             --radius-default: 16px;
         }
 
@@ -180,36 +180,79 @@
             color: var(--text-main);
         }
 
-        /* Filter Pills */
+        /* Filter Pills & Tab Animation */
         .category-pill {
             background-color: var(--bg-card-solid);
             color: var(--text-light);
             border: 1px solid var(--border-color);
-            padding: 8px 18px;
+            padding: 9px 20px;
             border-radius: 30px;
             font-weight: 600;
             font-size: 0.9rem;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 8px;
             text-decoration: none;
             user-select: none;
+            position: relative;
+            overflow: hidden;
         }
 
         .category-pill:hover {
             border-color: var(--primary-color);
             color: var(--primary-color);
-            transform: translateY(-2px);
+            transform: translateY(-3px) scale(1.03);
+            background-color: var(--primary-light);
+        }
+
+        .category-pill:active {
+            transform: translateY(0) scale(0.97);
         }
 
         .category-pill.active {
             background: var(--primary-color);
             color: var(--primary-text);
             border-color: var(--primary-color);
-            box-shadow: 0 4px 16px rgba(255, 230, 0, 0.35);
-            font-weight: 700;
+            box-shadow: 0 4px 18px rgba(245, 158, 11, 0.4);
+            font-weight: 800;
+            transform: translateY(-2px);
+        }
+
+        .category-pill.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40%;
+            height: 3px;
+            background: #ffffff;
+            border-radius: 3px;
+            opacity: 0.8;
+            animation: pillIndicator 0.3s ease;
+        }
+
+        @keyframes pillIndicator {
+            from { width: 0; opacity: 0; }
+            to { width: 40%; opacity: 0.8; }
+        }
+
+        /* Staggered Card Entrance Animation */
+        @keyframes cardFadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(24px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .product-grid-item {
+            animation: cardFadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
 
         /* Product Cards */
@@ -219,15 +262,15 @@
             border-radius: var(--radius-default);
             overflow: hidden;
             box-shadow: var(--card-shadow);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease, border-color 0.35s ease;
             height: 100%;
             display: flex;
             flex-direction: column;
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(10px);
         }
 
         .product-card:hover {
-            transform: translateY(-6px);
+            transform: translateY(-8px) scale(1.02);
             border-color: var(--primary-color);
             box-shadow: var(--card-hover-shadow);
         }
@@ -510,7 +553,7 @@
                 </div>
                 <div>
                     <div>BOBA &amp; BITES</div>
-                    <small class="d-block text-muted" style="font-size: 0.65rem; font-family: 'Plus Jakarta Sans'; font-weight: 600; letter-spacing: 1.5px;">ENDFIELD EDITION</small>
+                    <small class="d-block text-muted" style="font-size: 0.65rem; font-family: 'Plus Jakarta Sans'; font-weight: 600; letter-spacing: 1.5px;">BOBA &amp; SNACKS</small>
                 </div>
             </a>
 
@@ -562,7 +605,7 @@
                         Khám Phá Hương Vị Trà Sữa &amp; Đồ Ăn Vặt Đỉnh Cao
                     </h1>
                     <p class="text-light opacity-75 fs-6 mb-4" id="heroDescText" style="max-width: 620px; line-height: 1.6;">
-                        Nguyên liệu tươi sạch mỗi ngày, công thức pha chế độc quyền mang đến trải nghiệm vị giác bùng nổ theo chuẩn phong cách Endfield.
+                        Nguyên liệu tươi sạch mỗi ngày, công thức pha chế độc quyền mang đến trải nghiệm hương vị thơm ngon bùng nổ, chuẩn vị từng giọt.
                     </p>
 
                     <div class="d-flex flex-wrap gap-3">
@@ -796,7 +839,7 @@
     <footer class="border-top py-4 mt-auto" style="border-color: var(--border-color) !important;">
         <div class="container text-center text-muted small">
             <p class="mb-1 fw-semibold text-warning">BOBA &amp; BITES STORE © 2026</p>
-            <p class="mb-0">Hệ thống Trà Sữa &amp; Đồ Ăn Vặt chất lượng cao theo chuẩn Endfield Sci-Fi Dark UI.</p>
+            <p class="mb-0">Hệ thống Trà Sữa &amp; Đồ Ăn Vặt chất lượng cao, phục vụ nhanh chóng và tận tâm.</p>
         </div>
     </footer>
 
@@ -991,7 +1034,7 @@
             empty.classList.add('d-none');
             grid.classList.remove('d-none');
 
-            grid.innerHTML = filtered.map(p => {
+            grid.innerHTML = filtered.map((p, idx) => {
                 const emoji = getProductEmoji(p.name, p.category_name);
                 const badgeClass = (p.category_name && p.category_name.toLowerCase().includes('trà sữa')) ? 'badge-cat-tra-sua' : 'badge-cat-thuc-an';
                 const isOutOfStock = p.stock <= 0;
@@ -1000,7 +1043,7 @@
                 const remaining = p.stock - inCartQty;
 
                 return `
-                    <div class="col-6 col-md-4 col-lg-3 product-grid-item">
+                    <div class="col-6 col-md-4 col-lg-3 product-grid-item" style="animation-delay: ${Math.min(idx * 0.04, 0.45)}s;">
                         <div class="product-card" onclick="window.location.href='product-detail.html?id=${p.id}'" style="cursor: pointer;">
                             <div class="product-img-wrapper">
                                 <span class="category-badge-card ${badgeClass}">${p.category_name || 'Món ngon'}</span>
